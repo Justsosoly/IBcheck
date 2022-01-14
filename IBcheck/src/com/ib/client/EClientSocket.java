@@ -46,7 +46,7 @@ public class EClientSocket extends EClient implements EClientMsgSink  {
     	}
     	
     	EMessage msg = new EMessage(buf);
-    	
+    	//返回证券交易所，股票，期权日期等信息
     	sendMsg(msg);
     }
 

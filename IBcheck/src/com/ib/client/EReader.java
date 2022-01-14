@@ -14,7 +14,7 @@ import java.util.LinkedList;
 /**
  * This class reads commands from TWS and passes them to the user defined
  * EWrapper.
- *
+ * 当EReaderOSSignal的信号量被触发后，用户需要调用EReader中的处理信息函数，来触发EWrapper中对应的回调函数
  * This class is initialized with a DataInputStream that is connected to the
  * TWS. Messages begin with an ID and any relevant data are passed afterwards.
  */

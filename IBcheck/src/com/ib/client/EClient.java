@@ -2790,7 +2790,7 @@ public abstract class EClient {
             notConnected();
             return;
         }
-        
+        //连接上了，则判断服务器版本？若低于104则提示不支持
         if (m_serverVersion < MIN_SERVER_VER_SEC_DEF_OPT_PARAMS_REQ) {
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support security definition option requests.");
