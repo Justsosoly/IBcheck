@@ -2807,7 +2807,7 @@ public abstract class EClient {
         b.send(underlyingConId);
 
         try {
-            closeAndSend(b);
+            closeAndSend(b);//这一个语句返回所有苹果的期权信息
         }
         catch (IOException e) {
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQSECDEFOPTPARAMS, e.toString());
@@ -3879,7 +3879,7 @@ public abstract class EClient {
     }
 
     protected void sendMsg(EMessage msg) throws IOException {
-    	m_socketTransport.send(msg);
+    	m_socketTransport.send(msg);//为什么分成了2部分显示苹果期权
     }
 
     private static boolean IsEmpty(String str) {

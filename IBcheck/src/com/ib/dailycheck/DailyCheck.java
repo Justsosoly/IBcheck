@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.ib.client.*;
 
+import com.ib.client.*;
 import javax.swing.*;
 
 public class DailyCheck implements EWrapper {
@@ -25,7 +25,7 @@ public class DailyCheck implements EWrapper {
 	}
 
 	private void run() {
-		m_s.eConnect("localhost", 7496, 0);
+		m_s.eConnect("127.0.0.1", 7496, 0);//clientid=0?
 		
         final EReader reader = new EReader(m_s, m_signal);
         
@@ -53,7 +53,7 @@ public class DailyCheck implements EWrapper {
 		}
         //开始读取市场数据
 		m_s.reqSecDefOptParams(0, "AAPL", "",/* "",*/ "STK", 265598);//IBM 8314
-
+//		m_s.reqMktData(NextOrderId, null, null, false, false, null);
 		try {
 			System.in.read();
 		} catch (IOException e) {
