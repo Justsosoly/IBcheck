@@ -557,13 +557,13 @@ public abstract class EClient {
             return;
         }
 
-        if (m_serverVersion < MIN_SERVER_VER_SNAPSHOT_MKT_DATA && snapshot) {
-        	error(tickerId, EClientErrors.UPDATE_TWS,
+        if (m_serverVersion < MIN_SERVER_VER_SNAPSHOT_MKT_DATA && snapshot) { //debug里m_serverVersion=151
+        	error(tickerId, EClientErrors.UPDATE_TWS,               //35
         			"  It does not support snapshot market data requests.");
         	return;
         }
 
-        if (m_serverVersion < MIN_SERVER_VER_DELTA_NEUTRAL) {
+        if (m_serverVersion < MIN_SERVER_VER_DELTA_NEUTRAL) { //指令40
         	if (contract.deltaNeutralContract() != null) {
         		error(tickerId, EClientErrors.UPDATE_TWS,
         			"  It does not support delta-neutral orders.");
@@ -571,7 +571,7 @@ public abstract class EClient {
         	}
         }
 
-        if (m_serverVersion < MIN_SERVER_VER_REQ_MKT_DATA_CONID) {
+        if (m_serverVersion < MIN_SERVER_VER_REQ_MKT_DATA_CONID) {//指令47
             if (contract.conid() > 0) {
                 error(tickerId, EClientErrors.UPDATE_TWS,
                     "  It does not support conId parameter.");
@@ -579,7 +579,7 @@ public abstract class EClient {
             }
         }
 
-        if (m_serverVersion < MIN_SERVER_VER_TRADING_CLASS) {
+        if (m_serverVersion < MIN_SERVER_VER_TRADING_CLASS) {//指令68
             if (!IsEmpty(contract.tradingClass())) {
                 error(tickerId, EClientErrors.UPDATE_TWS,
                     "  It does not support tradingClass parameter in reqMarketData.");
@@ -593,7 +593,7 @@ public abstract class EClient {
             // send req mkt data msg
             Builder b = prepareBuffer(); 
 
-            b.send(REQ_MKT_DATA);
+            b.send(REQ_MKT_DATA);//指令1
             b.send(VERSION);
             b.send(tickerId);
 
@@ -608,7 +608,7 @@ public abstract class EClient {
             b.send(contract.strike());
             b.send(contract.getRight());
             
-            if (m_serverVersion >= 15) {
+            if (m_serverVersion >= 15) {   //151
                 b.send(contract.multiplier());
             }
             
@@ -648,7 +648,7 @@ public abstract class EClient {
                 }
             }
 
-            if (m_serverVersion >= MIN_SERVER_VER_DELTA_NEUTRAL) {
+            if (m_serverVersion >= MIN_SERVER_VER_DELTA_NEUTRAL) {//40
          	   if (contract.deltaNeutralContract() != null) {
          		   DeltaNeutralContract deltaNeutralContract = contract.deltaNeutralContract();
          		   
@@ -673,16 +673,16 @@ public abstract class EClient {
             	b.send(genericTickList);
             }
             
-            if (m_serverVersion >= MIN_SERVER_VER_SNAPSHOT_MKT_DATA) {
+            if (m_serverVersion >= MIN_SERVER_VER_SNAPSHOT_MKT_DATA) {//35
             	b.send(snapshot);
             }
             
-            if (m_serverVersion >= MIN_SERVER_VER_REQ_SMART_COMPONENTS) {
+            if (m_serverVersion >= MIN_SERVER_VER_REQ_SMART_COMPONENTS) {//114
             	b.send(regulatorySnapshot);
             }
             
             // send mktDataOptions parameter
-            if(m_serverVersion >= MIN_SERVER_VER_LINKING) {
+            if(m_serverVersion >= MIN_SERVER_VER_LINKING) {//70
                 b.send(mktDataOptions);
             }
             

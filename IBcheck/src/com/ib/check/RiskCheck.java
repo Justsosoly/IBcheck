@@ -46,7 +46,7 @@ public class RiskCheck {
 		Thread.sleep(1000);
 
 		//tickByTickOperations(wrapper.getClient());
-		//tickDataOperations(wrapper.getClient());
+		tickDataOperations(wrapper.getClient());
 		//tickOptionComputations(wrapper.getClient());
 //		orderOperations(wrapper.getClient(), wrapper.getCurrentOrderId());
 		//contractOperations(wrapper.getClient());
@@ -58,7 +58,7 @@ public class RiskCheck {
 		//marketScanners(wrapper.getClient());
 		//marketDataType(wrapper.getClient());
 		//historicalDataRequests(wrapper.getClient());
-		accountOperations(wrapper.getClient());//查看账户所有资金和持有头寸信息
+//		accountOperations(wrapper.getClient());//查看账户所有资金和持有头寸信息
 		//newsOperations(wrapper.getClient());
 		//marketDepthOperations(wrapper.getClient());
 		//rerouteCFDOperations(wrapper.getClient());
@@ -234,15 +234,15 @@ public class RiskCheck {
 		/*** Requesting real time market data ***/
 		//Thread.sleep(1000);
 		//! [reqmktdata]
-		client.reqMktData(1001, ContractSamples.StockComboContract(), "", false, false, null);
+//		client.reqMktData(1001, ContractSamples.StockComboContract(), "", false, false, null);
 		//! [reqmktdata]
 
 		//! [reqsmartcomponents]
-		client.reqSmartComponents(1013, "a6");
+//		client.reqSmartComponents(1013, "a6");
 		//! [reqsmartcomponents]
 
 		//! [reqmktdata_snapshot]
-		client.reqMktData(1003, ContractSamples.FutureComboContract(), "", true, false, null);
+//		client.reqMktData(1003, ContractSamples.FutureComboContract(), "", true, false, null);
 		//! [reqmktdata_snapshot]
 
 		/* 
@@ -254,48 +254,57 @@ public class RiskCheck {
 		
 		//! [reqmktdata_genticks]
 		//Requesting RTVolume (Time & Sales), shortable and Fundamental Ratios generic ticks
-		client.reqMktData(1004, ContractSamples.USStockAtSmart(), "233,236,258", false, false, null);
+//		client.reqMktData(1004, ContractSamples.USStockAtSmart(), "233,236,258", false, false, null);
 		//! [reqmktdata_genticks]
 		//! [reqmktdata_contractnews]
 		// Without the API news subscription this will generate an "invalid tick type" error
-		client.reqMktData(1005, ContractSamples.USStock(), "mdoff,292:BZ", false, false, null);
-		client.reqMktData(1006, ContractSamples.USStock(), "mdoff,292:BT", false, false, null);
-		client.reqMktData(1007, ContractSamples.USStock(), "mdoff,292:FLY", false, false, null);
-		client.reqMktData(1008, ContractSamples.USStock(), "mdoff,292:MT", false, false, null);
+//		client.reqMktData(1005, ContractSamples.USStock(), "mdoff,292:BZ", false, false, null);
+//		client.reqMktData(1006, ContractSamples.USStock(), "mdoff,292:BT", false, false, null);
+//		client.reqMktData(1007, ContractSamples.USStock(), "mdoff,292:FLY", false, false, null);
+//		client.reqMktData(1008, ContractSamples.USStock(), "mdoff,292:MT", false, false, null);
 		//! [reqmktdata_contractnews]
 		//! [reqmktdata_broadtapenews]
-		client.reqMktData(1009, ContractSamples.BTbroadtapeNewsFeed(), "mdoff,292", false, false, null);
-		client.reqMktData(1010, ContractSamples.BZbroadtapeNewsFeed(), "mdoff,292", false, false, null);
-		client.reqMktData(1011, ContractSamples.FLYbroadtapeNewsFeed(), "mdoff,292", false, false, null);
-		client.reqMktData(1012, ContractSamples.MTbroadtapeNewsFeed(), "mdoff,292", false, false, null);
+//		client.reqMktData(1009, ContractSamples.BTbroadtapeNewsFeed(), "mdoff,292", false, false, null);
+//		client.reqMktData(1010, ContractSamples.BZbroadtapeNewsFeed(), "mdoff,292", false, false, null);
+//		client.reqMktData(1011, ContractSamples.FLYbroadtapeNewsFeed(), "mdoff,292", false, false, null);
+//		client.reqMktData(1012, ContractSamples.MTbroadtapeNewsFeed(), "mdoff,292", false, false, null);
 		//! [reqmktdata_broadtapenews]
+		
 		//! [reqoptiondatagenticks]
-        //Requesting data for an option contract will return the greek values
+       
+		//Requesting data for an option contract will return the greek values
         client.reqMktData(1002, ContractSamples.OptionWithLocalSymbol(), "", false, false, null);
-        //! [reqoptiondatagenticks]
-		//! [reqfuturesopeninterest]
+//		 client.reqContractDetails(0, ContractSamples.OptionAtIse());
+//		client.reqMktData(1002, ContractSamples.OptionAtIse(),"", false, false, null);
+//		  client.reqMktData(1002, ContractSamples.OptionAtBOX(),"", false, false, null);
+//		client.reqMktData(1002, ContractSamples.USOptionContract(),"", false, false, null);		
+//    		 client.reqContractDetails(0, ContractSamples.OptionForQuery());
+		  //! [reqoptiondatagenticks]
+	
+		  
+		  //! [reqfuturesopeninterest]
         //Requesting data for a futures contract will return the futures open interest
-        client.reqMktData(1014, ContractSamples.SimpleFuture(), "mdoff,588", false, false, null);
+//        client.reqMktData(1014, ContractSamples.SimpleFuture(), "mdoff,588", false, false, null);
 		//! [reqfuturesopeninterest]
 
 		//! [reqmktdata_preopenbidask]
         //Requesting data for a futures contract will return the pre-open bid/ask flag
-        client.reqMktData(1015, ContractSamples.SimpleFuture(), "", false, false, null);
+//        client.reqMktData(1015, ContractSamples.SimpleFuture(), "", false, false, null);
         //! [reqmktData_preopenbidask]
 
         //! [reqavgoptvolume]
         //Requesting data for a stock will return the average option volume
-        client.reqMktData(1016, ContractSamples.USStockAtSmart(), "mdoff,105", false, false, null);
+//        client.reqMktData(1016, ContractSamples.USStockAtSmart(), "mdoff,105", false, false, null);
         //! [reqavgoptvolume]
         
 		Thread.sleep(10000);
 		//! [cancelmktdata]
-		client.cancelMktData(1001);
+//		client.cancelMktData(1001);
 		client.cancelMktData(1002);
-		client.cancelMktData(1003);
-		client.cancelMktData(1014);
-		client.cancelMktData(1015);
-		client.cancelMktData(1016);
+//		client.cancelMktData(1003);
+//		client.cancelMktData(1014);
+//		client.cancelMktData(1015);
+//		client.cancelMktData(1016);
 		//! [cancelmktdata]
 		
 	}
@@ -412,19 +421,23 @@ public class RiskCheck {
         /*** Requesting accounts' summary ***/
         Thread.sleep(2000);
         //! [reqaaccountsummary]
+        System.out.println("reqAccountSummary(9001, \"All\", \"AccountType,NetLiquidation,TotalCashValue");
         client.reqAccountSummary(9001, "All", "AccountType,NetLiquidation,TotalCashValue,SettledCash,AccruedCash,BuyingPower,EquityWithLoanValue,PreviousEquityWithLoanValue,GrossPositionValue,ReqTEquity,ReqTMargin,SMA,InitMarginReq,MaintMarginReq,AvailableFunds,ExcessLiquidity,Cushion,FullInitMarginReq,FullMaintMarginReq,FullAvailableFunds,FullExcessLiquidity,LookAheadNextChange,LookAheadInitMarginReq ,LookAheadMaintMarginReq,LookAheadAvailableFunds,LookAheadExcessLiquidity,HighestSeverity,DayTradesRemaining,Leverage");
         //! [reqaaccountsummary]
         
       //! [reqaaccountsummaryledger]
+        System.out.println("reqAccountSummary(9002, \"All\", \"$LEDGER\")");
         client.reqAccountSummary(9002, "All", "$LEDGER");
         //! [reqaaccountsummaryledger]
         Thread.sleep(2000);
         //! [reqaaccountsummaryledgercurrency]
- //       client.reqAccountSummary(9003, "All", "$LEDGER:EUR");
+        System.out.println("reqAccountSummary(9003, \"All\", \"$LEDGER:EUR\")");
+        client.reqAccountSummary(9003, "All", "$LEDGER:EUR");
         //! [reqaaccountsummaryledgercurrency]
         Thread.sleep(2000);
         //! [reqaaccountsummaryledgerall]
-//        client.reqAccountSummary(9004, "All", "$LEDGER:ALL");
+        System.out.println("reqAccountSummary(9004, \"All\", \"$LEDGER:ALL\")");
+        client.reqAccountSummary(9004, "All", "$LEDGER:ALL");
         //! [reqaaccountsummaryledgerall]
 		
 		//! [cancelaaccountsummary]
@@ -437,10 +450,12 @@ public class RiskCheck {
         /*** Subscribing to an account's information. Only one at a time! ***/
         Thread.sleep(2000);
         //! [reqaaccountupdates]
+        System.out.println("reqAccountUpdates,true");
         client.reqAccountUpdates(true, "U9238923");
         //! [reqaaccountupdates]
 		Thread.sleep(2000);
 		//! [cancelaaccountupdates]
+		   System.out.println("reqAccountUpdates,false");
 		client.reqAccountUpdates(false, "U9238923");
 		//! [cancelaaccountupdates]
 		
@@ -451,6 +466,7 @@ public class RiskCheck {
         Thread.sleep(2000);
         /*** Requesting all accounts' positions. ***/
         //! [reqpositions]
+        System.out.println("reqPositions()");
         client.reqPositions();
         //! [reqpositions]
 		Thread.sleep(2000);

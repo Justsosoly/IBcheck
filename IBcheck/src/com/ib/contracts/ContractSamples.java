@@ -147,13 +147,13 @@ public class ContractSamples {
 	
 	public static Contract OptionAtIse() {
 		Contract contract = new Contract();
-		contract.symbol("BPX");
+		contract.symbol("AAPL");//BPX
 		contract.secType("OPT");
 		contract.currency("USD");
-		contract.exchange("ISE");
-		contract.lastTradeDateOrContractMonth("20160916");
+		contract.exchange("SMART");
+		contract.lastTradeDateOrContractMonth("20220218");//20160916
 		contract.right("C");
-		contract.strike(65);
+		contract.strike(160);
 		contract.multiplier("100");
 		return contract;
 	}
@@ -185,8 +185,8 @@ public class ContractSamples {
 		contract.secType("OPT");
 		contract.currency("USD");
 		contract.exchange("SMART");
-		contract.lastTradeDateOrContractMonth("20170120");
-		contract.strike(615);
+		contract.lastTradeDateOrContractMonth("20220218");
+		contract.strike(2700);
 		contract.right("C");
 		contract.multiplier("100");
 		return contract;
@@ -195,13 +195,13 @@ public class ContractSamples {
 	public static Contract OptionAtBOX() {
 		//! [optcontract]
 		Contract contract = new Contract();
-		contract.symbol("GOOG");
+		contract.symbol("MSFT");
 		contract.secType("OPT");
 		contract.currency("USD");
-		contract.exchange("BOX");
-		contract.lastTradeDateOrContractMonth("20170120");
+		contract.exchange("SMART");
+		contract.lastTradeDateOrContractMonth("20220218");
 		contract.right("C");
-		contract.strike(615);
+		contract.strike(300);
 		contract.multiplier("100");
 		//! [optcontract]
 		return contract;
@@ -227,10 +227,21 @@ public class ContractSamples {
 		//! [optcontract_localsymbol]
 		Contract contract = new Contract();
 		//Watch out for the spaces within the local symbol!
-		contract.localSymbol("C DBK  DEC 20  1600");
+//		contract.localSymbol("C DBK  DEC 20  1600");//"P BMW  JUL 20  4650"
+//		contract.localSymbol("C FB  FEB 18  34500");
+		contract.localSymbol("FB    220218C00345000");
+//		contract.localSymbol("QQQ     220218C00390000");
+//        contract.conid(491941210);
+        
 		contract.secType("OPT");
-		contract.exchange("DTB");
-		contract.currency("EUR");
+		contract.exchange("SMART");
+		contract.currency("USD");
+		
+//		contract.symbol("FB");
+//		contract.lastTradeDateOrContractMonth("20220218");
+//		contract.right("C");
+//		contract.strike(300);
+		
 		//! [optcontract_localsymbol]
 		return contract;
 	}
@@ -328,10 +339,14 @@ public class ContractSamples {
 	public static Contract OptionForQuery() {
 		//! [optionforquery]
 		Contract contract = new Contract();
-		contract.symbol("FISV");
+		contract.symbol("FB");
 		contract.secType("OPT");
 		contract.currency("USD");
 		contract.exchange("SMART");
+		contract.lastTradeDateOrContractMonth("20220218");
+		contract.right("C");
+		contract.strike(300);
+		contract.conid(491941210);
 		//! [optionforquery]
 		return contract;
 	}
