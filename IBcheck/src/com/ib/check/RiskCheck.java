@@ -45,21 +45,21 @@ public class RiskCheck {
 		// In a production application, it would be best to wait for callbacks to confirm the connection is complete
 		Thread.sleep(1000);
 
-		//tickByTickOperations(wrapper.getClient());
-		tickDataOperations(wrapper.getClient());
-		//tickOptionComputations(wrapper.getClient());
-//		orderOperations(wrapper.getClient(), wrapper.getCurrentOrderId());
-		//contractOperations(wrapper.getClient());
-		//hedgeSample(wrapper.getClient(), wrapper.getCurrentOrderId());
-		//testAlgoSamples(wrapper.getClient(), wrapper.getCurrentOrderId());
-		//bracketSample(wrapper.getClient(), wrapper.getCurrentOrderId());
+//		tickByTickOperations(wrapper.getClient());//后台读取市场数据，系统实时报价
+		tickDataOperations(wrapper.getClient());//reqContractDetails期权相关信息
+//		tickOptionComputations(wrapper.getClient());
+//		orderOperations(wrapper.getClient(), wrapper.getCurrentOrderId());//需要写权限，订单
+//		contractOperations(wrapper.getClient());//可以通过reqContractDetails获取期权相关信息
+//		hedgeSample(wrapper.getClient(), wrapper.getCurrentOrderId());//需要写权限，订单
+//		testAlgoSamples(wrapper.getClient(), wrapper.getCurrentOrderId());
+//		bracketSample(wrapper.getClient(), wrapper.getCurrentOrderId());
 		//bulletins(wrapper.getClient());
 		//fundamentals(wrapper.getClient());
 		//marketScanners(wrapper.getClient());
 		//marketDataType(wrapper.getClient());
 		//historicalDataRequests(wrapper.getClient());
 //		accountOperations(wrapper.getClient());//查看账户所有资金和持有头寸信息
-		//newsOperations(wrapper.getClient());
+//		newsOperations(wrapper.getClient());
 		//marketDepthOperations(wrapper.getClient());
 		//rerouteCFDOperations(wrapper.getClient());
 		//marketRuleOperations(wrapper.getClient());
@@ -234,23 +234,23 @@ public class RiskCheck {
 		/*** Requesting real time market data ***/
 		//Thread.sleep(1000);
 		//! [reqmktdata]
-//		client.reqMktData(1001, ContractSamples.StockComboContract(), "", false, false, null);
+//		client.reqMktData(1001, ContractSamples.StockComboContract(), "", false, false, null);//期权组合下单
 		//! [reqmktdata]
 
 		//! [reqsmartcomponents]
-//		client.reqSmartComponents(1013, "a6");
+//		client.reqSmartComponents(1013, "a6");//返回各个交易所名称和交易字母
 		//! [reqsmartcomponents]
 
 		//! [reqmktdata_snapshot]
-//		client.reqMktData(1003, ContractSamples.FutureComboContract(), "", true, false, null);
+//		client.reqMktData(1003, ContractSamples.FutureComboContract(), "", true, false, null);//期货组合下单
 		//! [reqmktdata_snapshot]
 
-		/* 
+		 
 		//! [regulatorysnapshot] 
 		// Each regulatory snapshot request incurs a 0.01 USD fee
-		client.reqMktData(1014, ContractSamples.USStock(), "", false, true, null);
+//		client.reqMktData(1014, ContractSamples.USStock(), "", false, true, null);
 		//! [regulatorysnapshot]
-		*/
+		
 		
 		//! [reqmktdata_genticks]
 		//Requesting RTVolume (Time & Sales), shortable and Fundamental Ratios generic ticks
@@ -273,12 +273,12 @@ public class RiskCheck {
 		//! [reqoptiondatagenticks]
        
 		//Requesting data for an option contract will return the greek values
-        client.reqMktData(1002, ContractSamples.OptionWithLocalSymbol(), "", false, false, null);
-//		 client.reqContractDetails(0, ContractSamples.OptionAtIse());
-//		client.reqMktData(1002, ContractSamples.OptionAtIse(),"", false, false, null);
-//		  client.reqMktData(1002, ContractSamples.OptionAtBOX(),"", false, false, null);
-//		client.reqMktData(1002, ContractSamples.USOptionContract(),"", false, false, null);		
-//    		 client.reqContractDetails(0, ContractSamples.OptionForQuery());
+       client.reqMktData(1002, ContractSamples.OptionWithLocalSymbol(), "", false, false, null);//返回一堆参数Tick Price 1.2 size field
+//		 client.reqContractDetails(0, ContractSamples.OptionAtIse());//返回期权所有信息 AAPL
+//		client.reqMktData(1002, ContractSamples.OptionAtIse(),"", false, false, null);//返回一堆参数Tick AAPL Price size field
+//		  client.reqMktData(1002, ContractSamples.OptionAtBOX(),"", false, false, null);//返回一堆参数Tick MSFT Price 9.29 size field
+//		client.reqMktData(1002, ContractSamples.USOptionContract(),"", false, false, null);	//返回订单，之后又是返回参数	
+//    	client.reqContractDetails(0, ContractSamples.OptionForQuery());//返回期权所有信息 FB
 		  //! [reqoptiondatagenticks]
 	
 		  
@@ -300,7 +300,7 @@ public class RiskCheck {
 		Thread.sleep(10000);
 		//! [cancelmktdata]
 //		client.cancelMktData(1001);
-		client.cancelMktData(1002);
+//		client.cancelMktData(1002);
 //		client.cancelMktData(1003);
 //		client.cancelMktData(1014);
 //		client.cancelMktData(1015);

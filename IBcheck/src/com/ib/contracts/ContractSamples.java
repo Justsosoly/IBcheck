@@ -172,7 +172,7 @@ public class ContractSamples {
 	
 	public static Contract USStockAtSmart() {
 		Contract contract = new Contract();
-		contract.symbol("IBM");
+		contract.symbol("AAPL");
 		contract.secType("STK");
 		contract.currency("USD");
 		contract.exchange("SMART");
@@ -228,14 +228,15 @@ public class ContractSamples {
 		Contract contract = new Contract();
 		//Watch out for the spaces within the local symbol!
 //		contract.localSymbol("C DBK  DEC 20  1600");//"P BMW  JUL 20  4650"
-//		contract.localSymbol("C FB  FEB 18  34500");
-		contract.localSymbol("FB    220218C00345000");
-//		contract.localSymbol("QQQ     220218C00390000");
-//        contract.conid(491941210);
+//		contract.localSymbol("FB  220218C00300000");
+		
+
+        contract.conid(502056585);//AAPL 20220318 160 call
         
 		contract.secType("OPT");
 		contract.exchange("SMART");
 		contract.currency("USD");
+		System.out.println("the option is AAPL 20220318 160 call");
 		
 //		contract.symbol("FB");
 //		contract.lastTradeDateOrContractMonth("20220218");
