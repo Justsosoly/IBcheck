@@ -138,7 +138,7 @@ public abstract class EClient {
     private static final int REQ_FA = 18;
     private static final int REPLACE_FA = 19;
     private static final int REQ_HISTORICAL_DATA = 20;
-    private static final int EXERCISE_OPTIONS = 21;
+    private static final int EXERCISE_OPTIONS = 21;//期权的希腊值？outcoming
     private static final int REQ_SCANNER_SUBSCRIPTION = 22;
     private static final int CANCEL_SCANNER_SUBSCRIPTION = 23;
     private static final int REQ_SCANNER_PARAMETERS = 24;
@@ -154,10 +154,10 @@ public abstract class EClient {
     private static final int CANCEL_CALC_OPTION_PRICE = 57;
     private static final int REQ_GLOBAL_CANCEL = 58;
     private static final int REQ_MARKET_DATA_TYPE = 59;
-    private static final int REQ_POSITIONS = 61;
+    private static final int REQ_POSITIONS = 61;//获取账户里所持有的资产信息 Eclient中outgoing msg id
     private static final int REQ_ACCOUNT_SUMMARY = 62;
     private static final int CANCEL_ACCOUNT_SUMMARY = 63;
-    private static final int CANCEL_POSITIONS = 64;
+    private static final int CANCEL_POSITIONS = 64;//取消账户信息？
     private static final int VERIFY_REQUEST = 65;
     private static final int VERIFY_MESSAGE = 66;
     private static final int QUERY_DISPLAY_GROUPS = 67;
@@ -598,7 +598,7 @@ public abstract class EClient {
             b.send(tickerId);
 
             // send contract fields
-            if (m_serverVersion >= MIN_SERVER_VER_REQ_MKT_DATA_CONID) {
+            if (m_serverVersion >= MIN_SERVER_VER_REQ_MKT_DATA_CONID) {//151>47
                 b.send(contract.conid());
             }
             
@@ -624,7 +624,7 @@ public abstract class EClient {
                 b.send(contract.localSymbol());
             }
             
-            if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
+            if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {//151>68
                 b.send(contract.tradingClass());
             }
             
@@ -1252,7 +1252,7 @@ public abstract class EClient {
             close();
         }
     }
-
+//获取期权希腊值的方法
     public synchronized void exerciseOptions( int tickerId, Contract contract,
                                               int exerciseAction, int exerciseQuantity,
                                               String account, int override) {
@@ -2497,7 +2497,7 @@ public abstract class EClient {
     }
 
     public synchronized void calculateImpliedVolatility(int reqId, Contract contract,
-            double optionPrice, double underPrice,
+            double optionPrice, double underPrice,//假设期权价格，假设标的价格
             //reserved for future use, must be blank
             List<TagValue> impliedVolatilityOptions) {
 
@@ -2596,7 +2596,7 @@ public abstract class EClient {
     }
 
     public synchronized void calculateOptionPrice(int reqId, Contract contract,
-            double volatility, double underPrice,
+            double volatility, double underPrice,//假设波动率，假设标的价格
             //reserved for future use, must be blank
             List<TagValue> optionPriceOptions) {
 
@@ -2762,7 +2762,7 @@ public abstract class EClient {
             return;
         }
 
-        if (m_serverVersion < MIN_SERVER_VER_ACCT_SUMMARY) {
+        if (m_serverVersion < MIN_SERVER_VER_ACCT_SUMMARY) {//151<67
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support position requests.");
             return;
@@ -2772,7 +2772,7 @@ public abstract class EClient {
 
         Builder b = prepareBuffer();
 
-        b.send( REQ_POSITIONS);
+        b.send( REQ_POSITIONS);//61 Eclient发出的 outgoing msg id's
         b.send( VERSION);
 
         try {
@@ -2846,7 +2846,7 @@ public abstract class EClient {
             return;
         }
 
-        if (m_serverVersion < MIN_SERVER_VER_ACCT_SUMMARY) {
+        if (m_serverVersion < MIN_SERVER_VER_ACCT_SUMMARY) {//67
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support position cancellation.");
             return;

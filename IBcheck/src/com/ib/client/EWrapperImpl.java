@@ -13,8 +13,9 @@ import com.ib.client.*;
 
 //! [ewrapperimpl]
 public class EWrapperImpl implements EWrapper {
-	//! [ewrapperimpl]
 	
+	//! [ewrapperimpl]
+	int count=1;//计算期权数量
 	//! [socket_declare]
 	private EReaderSignal readerSignal;
 	private EClientSocket clientSocket;
@@ -42,7 +43,7 @@ public class EWrapperImpl implements EWrapper {
 	 //! [tickprice]
 	@Override
 	public void tickPrice(int tickerId, int field, double price, TickAttrib attribs) {
-		System.out.println("Tick Price. Ticker Id:"+tickerId+", Field: "+field+", Price: "+price+", CanAutoExecute: "+ attribs.canAutoExecute()
+		System.out.println("--Tick Price. Ticker Id:"+tickerId+", Field: "+field+", Price: "+price+", CanAutoExecute: "+ attribs.canAutoExecute()
 		+ ", pastLimit: " + attribs.pastLimit() + ", pre-open: " + attribs.preOpen());
 	}
 	//! [tickprice]
@@ -50,7 +51,7 @@ public class EWrapperImpl implements EWrapper {
 	//! [ticksize]
 	@Override
 	public void tickSize(int tickerId, int field, int size) {
-		System.out.println("Tick Size. Ticker Id:" + tickerId + ", Field: " + field + ", Size: " + size);
+		System.out.println("-----Tick Size. Ticker Id:" + tickerId + ", Field: " + field + ", Size: " + size);
 	}
 	//! [ticksize]
 	
@@ -65,8 +66,24 @@ public class EWrapperImpl implements EWrapper {
 	}
 	//! [tickoptioncomputation]
 	
+
+
+	
+	//自己分解计算头寸delta
+	@Override
+	public void tickOptionDelta(int tickerId, int field,
+			double impliedVol, double delta, double optPrice,
+			double pvDividend, double gamma, double vega, double theta,
+			double undPrice) {
+		System.out.println("++++tickOptionDelta++. TickerId: "+tickerId+", field: "+field+", ImpliedVolatility: "+impliedVol+", Delta: "+delta
+                +", OptionPrice: "+optPrice+", pvDividend: "+pvDividend+", Gamma: "+gamma+", Vega: "+vega+", Theta: "+theta+", UnderlyingPrice: "+undPrice);
+	}
+
+	
+	
 	//! [tickgeneric]
 	@Override
+	
 	public void tickGeneric(int tickerId, int tickType, double value) {
 		System.out.println("Tick Generic. Ticker Id:" + tickerId + ", Field: " + TickType.getField(tickType) + ", Value: " + value);
 	}
@@ -309,9 +326,36 @@ public class EWrapperImpl implements EWrapper {
 	@Override
 	public void position(String account, Contract contract, double pos,
 			double avgCost) {
+		
 		System.out.println("Position. "+account+" - Symbol: "+contract.symbol()+", SecType: "+contract.secType()+", Currency: "+contract.currency()+", Position: "+pos+", Avg cost: "+avgCost);
+    
 	}
 	//! [position]
+	//获取期权都全部delta值
+	@Override
+	public void getPositionExtend(String account, Contract contract, double pos,
+			double avgCost) {
+		
+		System.out.println("Position. "+account+" - Symbol: "+contract.symbol()+", SecType: "+contract.secType()+", Right: "+contract.right()+", Position: "+pos+", Avg cost: "+avgCost+",localSymbol:"+contract.localSymbol()+",Stike price:"+contract.strike()+",Date:"+contract.lastTradeDateOrContractMonth());
+	//如果判断头寸为期权则进入把contract里的信息都处理下
+		if (contract.getSecType().equalsIgnoreCase("OPT"))
+		{
+			if(contract.getRight().equalsIgnoreCase("C"))//为call则
+			{
+				System.out.println("This Option is Call");
+			}
+			
+			if(contract.getRight().equalsIgnoreCase("P"))//为put则
+			{
+				System.out.println("This Option is Put");
+			}
+			System.out.println("This Option count is:"+count++);
+				
+		}
+	    
+	}
+	//! [position]
+	
 	
 	//! [positionend]
 	@Override

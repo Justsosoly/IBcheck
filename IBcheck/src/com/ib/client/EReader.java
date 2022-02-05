@@ -113,7 +113,7 @@ public class EReader extends Thread {
     		msg = getMsg();
     	}
     }
-
+//当接受到message的时候，调用EReader里的processMsg（）来触发EWrapper中对应的回调函数
 	private EMessage readSingleMessage() throws IOException {
 		if (isUseV100Plus()) {
 			int msgSize = m_clientSocket.readInt();

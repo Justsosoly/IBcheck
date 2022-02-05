@@ -32,7 +32,7 @@ public class EWrapperMsgGenerator {
     		double gamma, double vega, double theta, double undPrice) {
 		return "id=" + tickerId + "  " + TickType.getField( field) +
             ": impliedVol = " + Util.maxDoubleToString(impliedVol) +
-            " delta = " + Util.maxDoubleToString(delta) +
+            " +++delta = " + Util.maxDoubleToString(delta) +
             " gamma = " + Util.maxDoubleToString(gamma) +
             " vega = " + Util.maxDoubleToString(vega) +
             " theta = " + Util.maxDoubleToString(theta) +

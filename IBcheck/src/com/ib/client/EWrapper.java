@@ -17,6 +17,11 @@ public interface EWrapper {
     void tickOptionComputation( int tickerId, int field, double impliedVol,
     		double delta, double optPrice, double pvDividend,
     		double gamma, double vega, double theta, double undPrice);
+    //自己获取期权的delta
+    void tickOptionDelta( int tickerId, int field, double impliedVol,
+    		double delta, double optPrice, double pvDividend,
+    		double gamma, double vega, double theta, double undPrice);
+    
 	void tickGeneric(int tickerId, int tickType, double value);
 	void tickString(int tickerId, int tickType, String value);
 	void tickEFP(int tickerId, int tickType, double basisPoints,
@@ -57,6 +62,9 @@ public interface EWrapper {
     void marketDataType(int reqId, int marketDataType);
     void commissionReport(CommissionReport commissionReport);
     void position(String account, Contract contract, double pos, double avgCost);
+    //取头寸里的期权，扩展一些输出内容
+    void getPositionExtend(String account, Contract contract, double pos, double avgCost);
+    
     void positionEnd();
     void accountSummary(int reqId, String account, String tag, String value, String currency);
     void accountSummaryEnd(int reqId);

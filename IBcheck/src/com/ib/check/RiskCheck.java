@@ -46,8 +46,8 @@ public class RiskCheck {
 		Thread.sleep(1000);
 
 //		tickByTickOperations(wrapper.getClient());//后台读取市场数据，系统实时报价
-		tickDataOperations(wrapper.getClient());//reqContractDetails期权相关信息
-//		tickOptionComputations(wrapper.getClient());
+    	tickDataOperations(wrapper.getClient());//reqContractDetails,reqMktData方法获取期权相关信息
+//		tickOptionComputations(wrapper.getClient());//获取期权delta等相关信息
 //		orderOperations(wrapper.getClient(), wrapper.getCurrentOrderId());//需要写权限，订单
 //		contractOperations(wrapper.getClient());//可以通过reqContractDetails获取期权相关信息
 //		hedgeSample(wrapper.getClient(), wrapper.getCurrentOrderId());//需要写权限，订单
@@ -58,6 +58,7 @@ public class RiskCheck {
 		//marketScanners(wrapper.getClient());
 		//marketDataType(wrapper.getClient());
 		//historicalDataRequests(wrapper.getClient());
+//		optionsOperations(wrapper.getClient());//假设波动率计算期权价格
 //		accountOperations(wrapper.getClient());//查看账户所有资金和持有头寸信息
 //		newsOperations(wrapper.getClient());
 		//marketDepthOperations(wrapper.getClient());
@@ -70,8 +71,9 @@ public class RiskCheck {
 		//histogram(wrapper.getClient());
 		//whatIfSamples(wrapper.getClient(), wrapper.getCurrentOrderId());
 		//historicalTicks(wrapper.getClient());
+		
 
-		Thread.sleep(100000);
+		Thread.sleep(10000);
 		m_client.eDisconnect();
 	}
 	
@@ -273,12 +275,18 @@ public class RiskCheck {
 		//! [reqoptiondatagenticks]
        
 		//Requesting data for an option contract will return the greek values
-       client.reqMktData(1002, ContractSamples.OptionWithLocalSymbol(), "", false, false, null);//返回一堆参数Tick Price 1.2 size field
+//       client.reqMktData(1002, ContractSamples.OptionAtIse(), "", false, false, null);//返回一堆参数Tick Price 1.2 size field 开盘才返回
 //		 client.reqContractDetails(0, ContractSamples.OptionAtIse());//返回期权所有信息 AAPL
+//   	 client.reqContractDetails(0, ContractSamples.OptionForQuery());//返回期权所有信息 FB
+//        client.calculateImpliedVolatility(5001, ContractSamples.OptionAtIse(), 12.25, 170, null);//假设期权价格 20220218 AAPL 160 call
+//        client.calculateOptionPrice(5002, ContractSamples.OptionAtIse(), 0.32, 170, null);//AAPL 假设波动率
+//        client.calculateImpliedVolatility(5001, ContractSamples.OptionForQuery(), 12.25, 302, null);//假设期权价格 20220218 FB 300 call
+//       client.calculateOptionPrice(5002, ContractSamples.OptionForQuery(), 0.45, 302, null);//FB 假设波动率
+
 //		client.reqMktData(1002, ContractSamples.OptionAtIse(),"", false, false, null);//返回一堆参数Tick AAPL Price size field
-//		  client.reqMktData(1002, ContractSamples.OptionAtBOX(),"", false, false, null);//返回一堆参数Tick MSFT Price 9.29 size field
+		  client.reqMktData(1002, ContractSamples.OptionAtBOX(),"", false, false, null);//返回一堆参数Tick MSFT Price 9.29 size field
 //		client.reqMktData(1002, ContractSamples.USOptionContract(),"", false, false, null);	//返回订单，之后又是返回参数	
-//    	client.reqContractDetails(0, ContractSamples.OptionForQuery());//返回期权所有信息 FB
+
 		  //! [reqoptiondatagenticks]
 	
 		  
@@ -300,7 +308,7 @@ public class RiskCheck {
 		Thread.sleep(10000);
 		//! [cancelmktdata]
 //		client.cancelMktData(1001);
-//		client.cancelMktData(1002);
+		client.cancelMktData(1002);//发送取消message
 //		client.cancelMktData(1003);
 //		client.cancelMktData(1014);
 //		client.cancelMktData(1015);
@@ -313,7 +321,7 @@ public class RiskCheck {
 		
 		/*** Requesting real time market data ***/
 		//! [reqmktdata]
-		client.reqMktData(2001, ContractSamples.FuturesOnOptions(), "", false, false, null);
+		client.reqMktData(2001, ContractSamples.OptionForQuery(), "", false, false, null);////返回期权所有信息 AAPL
 		//! [reqmktdata]
 		
 		Thread.sleep(10000);
@@ -406,7 +414,7 @@ public class RiskCheck {
  //   client.reqPositionsMulti(9003, "U9238923", "EUstocks");//注释掉并不影响输出结果
 
         //! [reqpositionsmulti]
-        Thread.sleep(10000);//10秒
+//        Thread.sleep(10000);//10秒
 
         /*** Requesting managed accounts***/
         //! [reqmanagedaccts]
@@ -419,55 +427,57 @@ public class RiskCheck {
 		//! [reqfamilycodes]
 
         /*** Requesting accounts' summary ***/
-        Thread.sleep(2000);
+    //    Thread.sleep(2000);
         //! [reqaaccountsummary]
-        System.out.println("reqAccountSummary(9001, \"All\", \"AccountType,NetLiquidation,TotalCashValue");
-        client.reqAccountSummary(9001, "All", "AccountType,NetLiquidation,TotalCashValue,SettledCash,AccruedCash,BuyingPower,EquityWithLoanValue,PreviousEquityWithLoanValue,GrossPositionValue,ReqTEquity,ReqTMargin,SMA,InitMarginReq,MaintMarginReq,AvailableFunds,ExcessLiquidity,Cushion,FullInitMarginReq,FullMaintMarginReq,FullAvailableFunds,FullExcessLiquidity,LookAheadNextChange,LookAheadInitMarginReq ,LookAheadMaintMarginReq,LookAheadAvailableFunds,LookAheadExcessLiquidity,HighestSeverity,DayTradesRemaining,Leverage");
+//        System.out.println("reqAccountSummary(9001, \"All\", \"AccountType,NetLiquidation,TotalCashValue");
+//        client.reqAccountSummary(9001, "All", "AccountType,NetLiquidation,TotalCashValue,SettledCash,AccruedCash,BuyingPower,EquityWithLoanValue,PreviousEquityWithLoanValue,GrossPositionValue,ReqTEquity,ReqTMargin,SMA,InitMarginReq,MaintMarginReq,AvailableFunds,ExcessLiquidity,Cushion,FullInitMarginReq,FullMaintMarginReq,FullAvailableFunds,FullExcessLiquidity,LookAheadNextChange,LookAheadInitMarginReq ,LookAheadMaintMarginReq,LookAheadAvailableFunds,LookAheadExcessLiquidity,HighestSeverity,DayTradesRemaining,Leverage");
         //! [reqaaccountsummary]
         
-      //! [reqaaccountsummaryledger]
-        System.out.println("reqAccountSummary(9002, \"All\", \"$LEDGER\")");
-        client.reqAccountSummary(9002, "All", "$LEDGER");
+      //! [reqaaccountsummaryledger] 9002，9003，9004每次运行的时候只能启动一个
+   //     System.out.println("reqAccountSummary(9002, \"All\", \"$LEDGER\")");
+   //     client.reqAccountSummary(9002, "All", "$LEDGER");
         //! [reqaaccountsummaryledger]
-        Thread.sleep(2000);
+    //    Thread.sleep(2000);
         //! [reqaaccountsummaryledgercurrency]
-        System.out.println("reqAccountSummary(9003, \"All\", \"$LEDGER:EUR\")");
-        client.reqAccountSummary(9003, "All", "$LEDGER:EUR");
+  //      System.out.println("reqAccountSummary(9003, \"All\", \"$LEDGER:EUR\")");
+//        client.reqAccountSummary(9003, "All", "$LEDGER:EUR");
         //! [reqaaccountsummaryledgercurrency]
-        Thread.sleep(2000);
+  //      Thread.sleep(2000);
         //! [reqaaccountsummaryledgerall]
-        System.out.println("reqAccountSummary(9004, \"All\", \"$LEDGER:ALL\")");
-        client.reqAccountSummary(9004, "All", "$LEDGER:ALL");
+     //   System.out.println("reqAccountSummary(9004, \"All\", \"$LEDGER:ALL\")");
+     //   client.reqAccountSummary(9004, "All", "$LEDGER:ALL");
         //! [reqaaccountsummaryledgerall]
 		
 		//! [cancelaaccountsummary]
-		client.cancelAccountSummary(9001);
-		client.cancelAccountSummary(9002);
-		client.cancelAccountSummary(9003);
-		client.cancelAccountSummary(9004);
+//		client.cancelAccountSummary(9001);
+//		client.cancelAccountSummary(9002);
+//		client.cancelAccountSummary(9003);
+//		client.cancelAccountSummary(9004);
 		//! [cancelaaccountsummary]
         
         /*** Subscribing to an account's information. Only one at a time! ***/
-        Thread.sleep(2000);
+ //       Thread.sleep(2000);
         //! [reqaaccountupdates]
-        System.out.println("reqAccountUpdates,true");
-        client.reqAccountUpdates(true, "U9238923");
+  //      System.out.println("reqAccountUpdates,true");
+ //       client.reqAccountUpdates(true, "U9238923");
         //! [reqaaccountupdates]
-		Thread.sleep(2000);
+//		Thread.sleep(2000);
 		//! [cancelaaccountupdates]
-		   System.out.println("reqAccountUpdates,false");
-		client.reqAccountUpdates(false, "U9238923");
+	//	   System.out.println("reqAccountUpdates,false");
+	//	client.reqAccountUpdates(false, "U9238923");
 		//! [cancelaaccountupdates]
 		
         //! [reqaaccountupdatesmulti]
   //      client.reqAccountUpdatesMulti(9002, "U9238923", "EUstocks", true);
-		 client.reqAccountUpdatesMulti(9002, "U9238923", "USstocks", true);
+//		 client.reqAccountUpdatesMulti(9002, "U9238923", "USstocks", true);
         //! [reqaaccountupdatesmulti]
-        Thread.sleep(2000);
+ //       Thread.sleep(2000);
+		
         /*** Requesting all accounts' positions. ***/
         //! [reqpositions]
         System.out.println("reqPositions()");
         client.reqPositions();
+        
         //! [reqpositions]
 		Thread.sleep(2000);
 		//! [cancelpositions]

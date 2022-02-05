@@ -155,6 +155,7 @@ public class ContractSamples {
 		contract.right("C");
 		contract.strike(160);
 		contract.multiplier("100");
+		System.out.println("the option is:20220218 AAPL 160 call");
 		return contract;
 	}
 	
@@ -347,7 +348,8 @@ public class ContractSamples {
 		contract.lastTradeDateOrContractMonth("20220218");
 		contract.right("C");
 		contract.strike(300);
-		contract.conid(491941210);
+//		contract.conid(491941210);
+		System.out.println("the option is 20220218 FB 300 call");
 		//! [optionforquery]
 		return contract;
 	}

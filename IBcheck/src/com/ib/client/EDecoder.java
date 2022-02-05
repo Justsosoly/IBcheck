@@ -20,8 +20,8 @@ import java.util.Set;
 class EDecoder implements ObjectInput {
     // incoming msg id's
     private static final int END_CONN           = -1;
-    private static final int TICK_PRICE		= 1;
-    private static final int TICK_SIZE		= 2;
+    private static final int TICK_PRICE		= 1;//请求市场数据后默认自动分配处理
+    private static final int TICK_SIZE		= 2;//请求市场数据后默认自动分配处理
     private static final int ORDER_STATUS	= 3;
     private static final int ERR_MSG		= 4;
     private static final int OPEN_ORDER         = 5;
@@ -40,9 +40,9 @@ class EDecoder implements ObjectInput {
     private static final int BOND_CONTRACT_DATA = 18;
     private static final int SCANNER_PARAMETERS = 19;
     private static final int SCANNER_DATA       = 20;
-    private static final int TICK_OPTION_COMPUTATION = 21;
-    private static final int TICK_GENERIC = 45;
-    private static final int TICK_STRING = 46;
+    private static final int TICK_OPTION_COMPUTATION = 21;//假设波动率计算期权的价格or假设价格计算波动率
+    private static final int TICK_GENERIC = 45;//请求市场数据后默认自动分配处理
+    private static final int TICK_STRING = 46;//请求市场数据后默认自动分配处理
     private static final int TICK_EFP = 47;
     private static final int CURRENT_TIME = 49;
     private static final int REAL_TIME_BARS = 50;
@@ -55,7 +55,7 @@ class EDecoder implements ObjectInput {
     private static final int TICK_SNAPSHOT_END = 57;
     private static final int MARKET_DATA_TYPE = 58;
     private static final int COMMISSION_REPORT = 59;
-    private static final int POSITION = 61;
+    private static final int POSITION = 61;//获取账户里的资产信息
     private static final int POSITION_END = 62;
     private static final int ACCOUNT_SUMMARY = 63;
     private static final int ACCOUNT_SUMMARY_END = 64;
@@ -169,16 +169,16 @@ class EDecoder implements ObjectInput {
             case END_CONN:
                 return 0;
                 
-            case TICK_PRICE:
+            case TICK_PRICE://当Eclient里reqmaketdata的时候message里的消息放的也是REQ_MKT_DATA=1
                 processTickPriceMsg();
                 break;
 
-            case TICK_SIZE:
+            case TICK_SIZE://在获取市场数据的时候进入
                 processTickSizeMsg();
                 break;
 
-            case POSITION:
-                processPositionMsg();
+            case POSITION://EDecoder中自定义消息号码
+                processPositionMsg();//当message的ID=POSITION的时候调用EWrapperImpl里的getPositionExtend
                 break;
 
             case POSITION_END:
@@ -193,15 +193,15 @@ class EDecoder implements ObjectInput {
                 processAccountSummaryEndMsg();
                 break;
 
-            case TICK_OPTION_COMPUTATION:
+            case TICK_OPTION_COMPUTATION://计算delta
                 processTickOptionComputationMsg();
             	break;
 
-            case TICK_GENERIC:
+            case TICK_GENERIC://在获取市场数据的时候进入45  double类型
                 processTickGenericMsg();
                 break;
 
-            case TICK_STRING:
+            case TICK_STRING://在获取市场数据的时候进入46 String类型
                 processTickStringMsg();
                 break;
 
@@ -225,8 +225,8 @@ class EDecoder implements ObjectInput {
                 processAcctUpdateTimeMsg();
                 break;
 
-            case ERR_MSG:
-                processErrMsgMsg();
+            case ERR_MSG:  //信号量=4，返回Error. Id: -1, Code: 2104, Msg: Market data farm connection is OK:cashfarm
+                processErrMsgMsg();  
                 break;
 
             case OPEN_ORDER:
@@ -317,7 +317,7 @@ class EDecoder implements ObjectInput {
                 processTickSnapshotEndMsg();
                 break;
             
-            case MARKET_DATA_TYPE:
+            case MARKET_DATA_TYPE://58 返回MarketDataType. [1002], Type: [1] 1表示实时数据Live
                 processMarketDataTypeMsg();
                 break;
             
@@ -385,7 +385,8 @@ class EDecoder implements ObjectInput {
             	processSmartComponentsMsg();
             	break;
             	
-            case TICK_REQ_PARAMS:
+            case TICK_REQ_PARAMS://返回Tick req params. Ticker Id:1002, Min tick: 0.01, bbo exchange: c70003, Snapshot permissions: 0
+
             	processTickReqParamsMsg();
             	break;
 
@@ -1577,14 +1578,14 @@ class EDecoder implements ObjectInput {
 
 		m_EWrapper.tickGeneric( tickerId, tickType, value);
 	}
-
+//取得期权的delta值
 	private void processTickOptionComputationMsg() throws IOException {
 		int version = readInt();
 		int tickerId = readInt();
-		int tickType = readInt();
+		int tickType = readInt();//从哪得到10，11，12，13这些类型的参数？
 		double impliedVol = readDouble();
 		if (Double.compare(impliedVol, -1) == 0) { // -1 is the "not yet computed" indicator
-			impliedVol = Double.MAX_VALUE;
+			impliedVol = Double.MAX_VALUE;//让impliedVol等于无穷大
 		}
 		
 		double delta = readDouble();
@@ -1597,9 +1598,9 @@ class EDecoder implements ObjectInput {
 		double vega = Double.MAX_VALUE;
 		double theta = Double.MAX_VALUE;
 		double undPrice = Double.MAX_VALUE;
-		if (version >= 6 || tickType == TickType.MODEL_OPTION.index()
+		if (version >= 6 || tickType == TickType.MODEL_OPTION.index()//TickType=13，依据模型计算
 				|| tickType == TickType.DELAYED_MODEL_OPTION.index()) { // introduced in version == 5
-			optPrice = readDouble();
+			optPrice = readDouble();//或者是83延迟的
 			if (Double.compare(optPrice, -1) == 0) { // -1 is the "not yet computed" indicator
 				optPrice = Double.MAX_VALUE;
 			}
@@ -1627,7 +1628,10 @@ class EDecoder implements ObjectInput {
 			}
 		}
 
-		m_EWrapper.tickOptionComputation( tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
+	//	m_EWrapper.tickOptionComputation( tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
+
+		m_EWrapper.tickOptionDelta( tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
+
 	}
 
 	private void processAccountSummaryEndMsg() throws IOException {
@@ -1651,6 +1655,8 @@ class EDecoder implements ObjectInput {
 		m_EWrapper.positionEnd();
 	}
 
+	
+	//调用 EWrapperImpl.position里的方法，可以自己定义
 	private void processPositionMsg() throws IOException {
 		int version = readInt();
 		String account = readStr();
@@ -1676,7 +1682,8 @@ class EDecoder implements ObjectInput {
 			avgCost = readDouble();
 		}
 
-		m_EWrapper.position( account, contract, pos, avgCost);
+	//	m_EWrapper.position( account, contract, pos, avgCost);
+		m_EWrapper.getPositionExtend(account, contract, pos, avgCost);
 	}
 
 	private void processTickSizeMsg() throws IOException {
@@ -1688,10 +1695,10 @@ class EDecoder implements ObjectInput {
 		m_EWrapper.tickSize( tickerId, tickType, size);
 	}
 
-	private void processTickPriceMsg() throws IOException {
-		int version = readInt();
+	private void processTickPriceMsg() throws IOException {//price和size都会返回
+		int version = readInt();//6
 		int tickerId = readInt();
-		int tickType = readInt();
+		int tickType = readInt();//？哪里来的 第一次进是1，第二次是2，第四次进是4
 		double price = readDouble();
 		int size = 0;
 		TickAttrib attribs = new TickAttrib();
@@ -1705,7 +1712,7 @@ class EDecoder implements ObjectInput {
 
 			attribs.canAutoExecute(attrMask == 1);
 			
-			if (m_serverVersion >= EClient.MIN_SERVER_VER_PAST_LIMIT) {
+			if (m_serverVersion >= EClient.MIN_SERVER_VER_PAST_LIMIT) {//151>109
 				BitMask mask = new BitMask(attrMask);
 				
 				attribs.canAutoExecute(mask.get(0));
@@ -1719,7 +1726,7 @@ class EDecoder implements ObjectInput {
 		
 		m_EWrapper.tickPrice( tickerId, tickType, price, attribs);
 
-		if( version >= 2) {
+		if( version >= 2) {//version=6>=2
 		    final int sizeTickType;
 		    switch (tickType) {
 		        case 1: // BID
@@ -1995,7 +2002,7 @@ class EDecoder implements ObjectInput {
     }
 
     public double readDouble() throws IOException {
-        String str = readStr();
+        String str = readStr();//哪里得到-2参数
         return str == null ? 0 : Double.parseDouble( str);
     }
 
