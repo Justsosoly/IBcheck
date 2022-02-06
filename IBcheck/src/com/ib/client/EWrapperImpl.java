@@ -336,7 +336,7 @@ public class EWrapperImpl implements EWrapper {
 	public void getPositionExtend(String account, Contract contract, double pos,
 			double avgCost) {
 		
-		System.out.println("Position. "+account+" - Symbol: "+contract.symbol()+", SecType: "+contract.secType()+", Right: "+contract.right()+", Position: "+pos+", Avg cost: "+avgCost+",localSymbol:"+contract.localSymbol()+",Stike price:"+contract.strike()+",Date:"+contract.lastTradeDateOrContractMonth());
+		System.out.println("Position. "+account+" - Symbol: "+contract.symbol()+", SecType: "+contract.secType()+", Right: "+contract.right()+", Position: "+pos+", Avg cost: "+avgCost+",localSymbol:"+contract.localSymbol()+",Stike price:"+contract.strike()+",Date:"+contract.lastTradeDateOrContractMonth()+"option delta:"+contract.deltaNeutralContract()+contract.comboLegsDescrip());
 	//如果判断头寸为期权则进入把contract里的信息都处理下
 		if (contract.getSecType().equalsIgnoreCase("OPT"))
 		{

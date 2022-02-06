@@ -23,7 +23,7 @@ public class RiskCheck {
 		final EReaderSignal m_signal = wrapper.getSignal();
 		//! [connect]
 		m_client.eConnect("127.0.0.1", 7496, 0);
-		//m_client.eConnect("127.0.0.1", 7497, 2);一开始连接模拟环境
+	//	m_client.eConnect("127.0.0.1", 7497, 2);//一开始连接模拟环境
 		//! [connect]
 		//! [ereader]
 		final EReader reader = new EReader(m_client, m_signal);   
@@ -46,7 +46,7 @@ public class RiskCheck {
 		Thread.sleep(1000);
 
 //		tickByTickOperations(wrapper.getClient());//后台读取市场数据，系统实时报价
-    	tickDataOperations(wrapper.getClient());//reqContractDetails,reqMktData方法获取期权相关信息
+//    	tickDataOperations(wrapper.getClient());//reqContractDetails,reqMktData方法获取期权相关信息
 //		tickOptionComputations(wrapper.getClient());//获取期权delta等相关信息
 //		orderOperations(wrapper.getClient(), wrapper.getCurrentOrderId());//需要写权限，订单
 //		contractOperations(wrapper.getClient());//可以通过reqContractDetails获取期权相关信息
@@ -56,12 +56,13 @@ public class RiskCheck {
 		//bulletins(wrapper.getClient());
 		//fundamentals(wrapper.getClient());
 		//marketScanners(wrapper.getClient());
-		//marketDataType(wrapper.getClient());
+
 		//historicalDataRequests(wrapper.getClient());
 //		optionsOperations(wrapper.getClient());//假设波动率计算期权价格
-//		accountOperations(wrapper.getClient());//查看账户所有资金和持有头寸信息
+		accountOperations(wrapper.getClient());//查看账户所有资金和持有头寸信息
+		marketDataType(wrapper.getClient());
 //		newsOperations(wrapper.getClient());
-		//marketDepthOperations(wrapper.getClient());
+//		marketDepthOperations(wrapper.getClient());
 		//rerouteCFDOperations(wrapper.getClient());
 		//marketRuleOperations(wrapper.getClient());
 		//tickDataOperations(wrapper.getClient());
@@ -73,7 +74,7 @@ public class RiskCheck {
 		//historicalTicks(wrapper.getClient());
 		
 
-		Thread.sleep(10000);
+		Thread.sleep(100000);
 		m_client.eDisconnect();
 	}
 	
@@ -240,7 +241,7 @@ public class RiskCheck {
 		//! [reqmktdata]
 
 		//! [reqsmartcomponents]
-//		client.reqSmartComponents(1013, "a6");//返回各个交易所名称和交易字母
+		client.reqSmartComponents(1013, "a6");//返回各个交易所名称和交易字母
 		//! [reqsmartcomponents]
 
 		//! [reqmktdata_snapshot]
@@ -254,7 +255,7 @@ public class RiskCheck {
 		//! [regulatorysnapshot]
 		
 		
-		//! [reqmktdata_genticks]
+		//! [reqmktdata_genticks]236 Shortable  256 Inventory  258 Fundamental Ratios
 		//Requesting RTVolume (Time & Sales), shortable and Fundamental Ratios generic ticks
 //		client.reqMktData(1004, ContractSamples.USStockAtSmart(), "233,236,258", false, false, null);
 		//! [reqmktdata_genticks]
@@ -274,8 +275,12 @@ public class RiskCheck {
 		
 		//! [reqoptiondatagenticks]
        
+	
+		
+		
+		
 		//Requesting data for an option contract will return the greek values
-//       client.reqMktData(1002, ContractSamples.OptionAtIse(), "", false, false, null);//返回一堆参数Tick Price 1.2 size field 开盘才返回
+//      client.reqMktData(1002, ContractSamples.OptionAtIse(), "", false, false, null);//返回一堆参数Tick Price 1.2 size field 开盘才返回
 //		 client.reqContractDetails(0, ContractSamples.OptionAtIse());//返回期权所有信息 AAPL
 //   	 client.reqContractDetails(0, ContractSamples.OptionForQuery());//返回期权所有信息 FB
 //        client.calculateImpliedVolatility(5001, ContractSamples.OptionAtIse(), 12.25, 170, null);//假设期权价格 20220218 AAPL 160 call
@@ -283,8 +288,8 @@ public class RiskCheck {
 //        client.calculateImpliedVolatility(5001, ContractSamples.OptionForQuery(), 12.25, 302, null);//假设期权价格 20220218 FB 300 call
 //       client.calculateOptionPrice(5002, ContractSamples.OptionForQuery(), 0.45, 302, null);//FB 假设波动率
 
-//		client.reqMktData(1002, ContractSamples.OptionAtIse(),"", false, false, null);//返回一堆参数Tick AAPL Price size field
-		  client.reqMktData(1002, ContractSamples.OptionAtBOX(),"", false, false, null);//返回一堆参数Tick MSFT Price 9.29 size field
+		client.reqMktData(1002, ContractSamples.OptionAtIse(),"", false, false, null);//返回一堆参数Tick AAPL Price size field
+//		  client.reqMktData(1002, ContractSamples.OptionAtBOX(),"", false, false, null);//返回一堆参数Tick MSFT Price 9.29 size field
 //		client.reqMktData(1002, ContractSamples.USOptionContract(),"", false, false, null);	//返回订单，之后又是返回参数	
 
 		  //! [reqoptiondatagenticks]
@@ -305,7 +310,7 @@ public class RiskCheck {
 //        client.reqMktData(1016, ContractSamples.USStockAtSmart(), "mdoff,105", false, false, null);
         //! [reqavgoptvolume]
         
-		Thread.sleep(10000);
+	//	Thread.sleep(10000);
 		//! [cancelmktdata]
 //		client.cancelMktData(1001);
 		client.cancelMktData(1002);//发送取消message
@@ -389,8 +394,10 @@ public class RiskCheck {
 		//! [reqMktDepthExchanges]
 
         //! [reqmarketdepth]
-        client.reqMktDepth(2001, ContractSamples.EurGbpFx(), 5, false, null);
-        //! [reqmarketdepth]
+        //client.reqMktDepth(2001, ContractSamples.EurGbpFx(), 5, false, null);
+		client.reqMktDepth(2001, ContractSamples.USStockAtSmart(), 5, false, null);
+		
+		//! [reqmarketdepth]
         Thread.sleep(2000);
         /*** Canceling the Deep Book request ***/
         //! [cancelmktdepth]
@@ -398,7 +405,7 @@ public class RiskCheck {
         //! [cancelmktdepth]
 
         //! [reqmarketdepth]
-        client.reqMktDepth(2002, ContractSamples.EuropeanStock(), 5, true, null);
+        client.reqMktDepth(2002, ContractSamples.USStockAtSmart(), 5, true, null);
         //! [reqmarketdepth]
         Thread.sleep(5000);
         //! [cancelmktdepth]
@@ -853,24 +860,26 @@ public class RiskCheck {
         /*** Switch to live (1) frozen (2) delayed (3) or delayed frozen (4)***/
         client.reqMarketDataType(2);
         //! [reqmarketdatatype]
+		client.reqMktData(1002, ContractSamples.OptionAtIse(),"", false, false, null);//返回一堆参数Tick AAPL Price size field
+
 		
 	}
 	
 	private static void optionsOperations(EClientSocket client) {
 		
 		//! [reqsecdefoptparams]
-		client.reqSecDefOptParams(0, "IBM", "", "STK", 8314);
+//		client.reqSecDefOptParams(0, "IBM", "", "STK", 8314);
 		//! [reqsecdefoptparams]
 		
 		//! [calculateimpliedvolatility]
-		client.calculateImpliedVolatility(5001, ContractSamples.OptionAtBOX(), 5, 85, null);
+//		client.calculateImpliedVolatility(5001, ContractSamples.OptionAtBOX(), 5, 85, null);
 		//! [calculateimpliedvolatility]
 		
 		//** Canceling implied volatility ***
-		client.cancelCalculateImpliedVolatility(5001);
+//		client.cancelCalculateImpliedVolatility(5001);
 		
-		//! [calculateoptionprice]
-		client.calculateOptionPrice(5002, ContractSamples.OptionAtBOX(), 0.22, 85, null);
+		//! [calculateoptionprice]//MSFT 300 call volatility，underPrice
+		client.calculateOptionPrice(5002, ContractSamples.OptionAtBOX(), 0.29824, 305.3, null);
 		//! [calculateoptionprice]
 		
 		//** Canceling option's price calculation ***
@@ -878,7 +887,7 @@ public class RiskCheck {
 		
 		//! [exercise_options]
 		//** Exercising options ***
-		client.exerciseOptions(5003, ContractSamples.OptionWithTradingClass(), 1, 1, "", 1);
+//		client.exerciseOptions(5003, ContractSamples.OptionWithTradingClass(), 1, 1, "", 1);
 		//! [exercise_options]
 	}
 

@@ -153,7 +153,7 @@ public abstract class EClient {
     private static final int CANCEL_CALC_IMPLIED_VOLAT = 56;
     private static final int CANCEL_CALC_OPTION_PRICE = 57;
     private static final int REQ_GLOBAL_CANCEL = 58;
-    private static final int REQ_MARKET_DATA_TYPE = 59;
+    private static final int REQ_MARKET_DATA_TYPE = 59;//获取市场数据类型，1实时2冻结
     private static final int REQ_POSITIONS = 61;//获取账户里所持有的资产信息 Eclient中outgoing msg id
     private static final int REQ_ACCOUNT_SUMMARY = 62;
     private static final int CANCEL_ACCOUNT_SUMMARY = 63;
@@ -2731,7 +2731,7 @@ public abstract class EClient {
             return;
         }
 
-        if (m_serverVersion < MIN_SERVER_VER_REQ_MARKET_DATA_TYPE) {
+        if (m_serverVersion < MIN_SERVER_VER_REQ_MARKET_DATA_TYPE) {//151<55
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                     "  It does not support marketDataType requests.");
             return;
@@ -2743,7 +2743,7 @@ public abstract class EClient {
         try {
             Builder b = prepareBuffer(); 
 
-            b.send( REQ_MARKET_DATA_TYPE);
+            b.send( REQ_MARKET_DATA_TYPE);//59
             b.send( VERSION);
             b.send( marketDataType);
 

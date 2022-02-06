@@ -233,7 +233,7 @@ class EDecoder implements ObjectInput {
                 processOpenOrderMsg();
                 break;
 
-            case NEXT_VALID_ID:
+            case NEXT_VALID_ID://第一次进到这个，orderId=1 输出：Next Valid Id: [1]
                 processNextValidIdMsg();
                 break;
 
@@ -265,7 +265,7 @@ class EDecoder implements ObjectInput {
                 processNewsBulletinsMsg();
                 break;
             
-            case MANAGED_ACCTS:
+            case MANAGED_ACCTS: //15，输出：Account list: U10019359,U9238923,
                 processManagedAcctsMsg();
                 break;
 
@@ -385,7 +385,7 @@ class EDecoder implements ObjectInput {
             	processSmartComponentsMsg();
             	break;
             	
-            case TICK_REQ_PARAMS://返回Tick req params. Ticker Id:1002, Min tick: 0.01, bbo exchange: c70003, Snapshot permissions: 0
+            case TICK_REQ_PARAMS://81返回Tick req params. Ticker Id:1002, Min tick: 0.01, bbo exchange: c70003, Snapshot permissions: 0
 
             	processTickReqParamsMsg();
             	break;
@@ -1582,7 +1582,7 @@ class EDecoder implements ObjectInput {
 	private void processTickOptionComputationMsg() throws IOException {
 		int version = readInt();
 		int tickerId = readInt();
-		int tickType = readInt();//从哪得到10，11，12，13这些类型的参数？
+		int tickType = readInt();//从哪得到10，11，12，13这些类型的参数？直接从
 		double impliedVol = readDouble();
 		if (Double.compare(impliedVol, -1) == 0) { // -1 is the "not yet computed" indicator
 			impliedVol = Double.MAX_VALUE;//让impliedVol等于无穷大
@@ -2031,7 +2031,7 @@ class EDecoder implements ObjectInput {
     		return m_msgLength;
     	}
     	
-    	@Override public String readStr() throws IOException {
+    	@Override public String readStr() throws IOException { //具体实现
     		 StringBuilder sb = new StringBuilder();
     		    		 
  	         for(; true; m_msgLength++) {
@@ -2044,10 +2044,11 @@ class EDecoder implements ObjectInput {
  	            	m_msgLength++;
  	                break;
  	            }
- 	            sb.append( (char)c);
+ 	            sb.append( (char)c); //只要InputStream里有内容，就会一直读并全部拼凑到str里
  	        }
  	
  	        String str = sb.toString();
+ 	     //   System.out.println("the result str is:"+str);
  	        return str.length() == 0 ? null : str;    
  	    }
     	
