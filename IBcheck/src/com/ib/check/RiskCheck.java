@@ -59,13 +59,12 @@ public class RiskCheck {
 
 		//historicalDataRequests(wrapper.getClient());
 //		optionsOperations(wrapper.getClient());//假设波动率计算期权价格
-		accountOperations(wrapper.getClient());//查看账户所有资金和持有头寸信息
+//		accountOperations(wrapper.getClient());//查看账户所有资金和持有头寸信息
 		marketDataType(wrapper.getClient());
 //		newsOperations(wrapper.getClient());
 //		marketDepthOperations(wrapper.getClient());
 		//rerouteCFDOperations(wrapper.getClient());
 		//marketRuleOperations(wrapper.getClient());
-		//tickDataOperations(wrapper.getClient());
 		//pnlSingle(wrapper.getClient());
 		//continuousFuturesOperations(wrapper.getClient());
 		//pnlSingle(wrapper.getClient());
@@ -556,14 +555,15 @@ public class RiskCheck {
 	
 	private static void contractOperations(EClientSocket client) {
 		
-		//! [reqcontractdetails]
+		// [reqcontractdetails]
+		/*
 		client.reqContractDetails(210, ContractSamples.OptionForQuery());
 		client.reqContractDetails(211, ContractSamples.EurGbpFx());
 		client.reqContractDetails(212, ContractSamples.Bond());
 		client.reqContractDetails(213, ContractSamples.FuturesOnOptions());
 		client.reqContractDetails(214, ContractSamples.SimpleFuture());
 		//! [reqcontractdetails]
-
+        */
 		//! [reqmatchingsymbols]
 		client.reqMatchingSymbols(211, "IB");
 		//! [reqmatchingsymbols]
@@ -854,12 +854,14 @@ public class RiskCheck {
 		
 	}
 	
-	private static void marketDataType(EClientSocket client) {
+	private static void marketDataType(EClientSocket client) throws InterruptedException {
 		
 		//! [reqmarketdatatype]
         /*** Switch to live (1) frozen (2) delayed (3) or delayed frozen (4)***/
         client.reqMarketDataType(2);
         //! [reqmarketdatatype]
+        Thread.sleep(1000);
+  
 		client.reqMktData(1002, ContractSamples.OptionAtIse(),"", false, false, null);//返回一堆参数Tick AAPL Price size field
 
 		

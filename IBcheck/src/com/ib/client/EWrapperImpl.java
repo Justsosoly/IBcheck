@@ -9,18 +9,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.ib.check.AccountPosition;
 import com.ib.client.*;
 
 //! [ewrapperimpl]
 public class EWrapperImpl implements EWrapper {
 	
 	//! [ewrapperimpl]
-	int count=1;//计算期权数量
 	//! [socket_declare]
 	private EReaderSignal readerSignal;
 	private EClientSocket clientSocket;
 	protected int currentOrderId = -1;
 	//! [socket_declare]
+	
+
 	
 	//! [socket_init]
 	public EWrapperImpl() {
@@ -335,23 +337,9 @@ public class EWrapperImpl implements EWrapper {
 	@Override
 	public void getPositionExtend(String account, Contract contract, double pos,
 			double avgCost) {
+
 		
-		System.out.println("Position. "+account+" - Symbol: "+contract.symbol()+", SecType: "+contract.secType()+", Right: "+contract.right()+", Position: "+pos+", Avg cost: "+avgCost+",localSymbol:"+contract.localSymbol()+",Stike price:"+contract.strike()+",Date:"+contract.lastTradeDateOrContractMonth()+"option delta:"+contract.deltaNeutralContract()+contract.comboLegsDescrip());
-	//如果判断头寸为期权则进入把contract里的信息都处理下
-		if (contract.getSecType().equalsIgnoreCase("OPT"))
-		{
-			if(contract.getRight().equalsIgnoreCase("C"))//为call则
-			{
-				System.out.println("This Option is Call");
-			}
-			
-			if(contract.getRight().equalsIgnoreCase("P"))//为put则
-			{
-				System.out.println("This Option is Put");
-			}
-			System.out.println("This Option count is:"+count++);
-				
-		}
+		System.out.println("Position. "+account+" - Symbol: "+contract.symbol()+", SecType: "+contract.secType()+", Right: "+contract.right()+", Position: "+pos+", Avg cost: "+avgCost+",localSymbol:"+contract.localSymbol()+",Stike price:"+contract.strike()+",Date:"+contract.lastTradeDateOrContractMonth());
 	    
 	}
 	//! [position]

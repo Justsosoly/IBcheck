@@ -1,13 +1,13 @@
 package com.ib.check;
 	
 	//股票类型
-	public class Stock
+	public class Stock extends Security
 	{
 		 String account;
 		 String secType;
 		 String symbol;
-		 int positon;
-		 int avgCost;
+		 double positon;
+		 double avgCost;
 		public String getAccount() {
 			return account;
 		}
@@ -26,16 +26,16 @@ package com.ib.check;
 		public void setSymbol(String symbol) {
 			this.symbol = symbol;
 		}
-		public int getPositon() {
+		public double getPositon() {
 			return positon;
 		}
-		public void setPositon(int positon) {
+		public void setPositon(double positon) {
 			this.positon = positon;
 		}
-		public int getAvgCost() {
+		public double getAvgCost() {
 			return avgCost;
 		}
-		public void setAvgCost(int avgCost) {
+		public void setAvgCost(double avgCost) {
 			this.avgCost = avgCost;
 		}
 

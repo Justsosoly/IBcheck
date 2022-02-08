@@ -1,7 +1,7 @@
 package com.ib.check;
 
 	//期权类型
-	public class Option
+	public class Option extends Security
 	{
 		 String account;
 		 String localSymbol;
@@ -9,8 +9,8 @@ package com.ib.check;
 		 String right;
 		 String symbol;
 		 String date;
-		 int positon;
-		 int avgCost;
+		 double positon;
+		 double avgCost;
 		 double strikePrice;
 		 int optionPrice;
 		 float delta;
@@ -19,6 +19,10 @@ package com.ib.check;
 		 float theta;
 		 float imvolatility;
 		 float underlyingPrice;
+		 public Option()
+		 {
+			 
+		 }
 		 
 	     public Option( String contract_account, String contract_localSymbol, String contract_secType,String contract_right,String contract_symbol,String contract_date,int contract_positon,
 	             int contract_avgCost,
@@ -98,19 +102,19 @@ package com.ib.check;
 				this.date = date;
 			}
 
-			public int getPositon() {
+			public double getPositon() {
 				return positon;
 			}
 
-			public void setPositon(int positon) {
+			public void setPositon(double positon) {
 				this.positon = positon;
 			}
 
-			public int getAvgCost() {
+			public double getAvgCost() {
 				return avgCost;
 			}
 
-			public void setAvgCost(int avgCost) {
+			public void setAvgCost(double avgCost) {
 				this.avgCost = avgCost;
 			}
 

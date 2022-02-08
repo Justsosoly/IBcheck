@@ -15,6 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.ib.check.AccountPosition;
+
 import java.util.Set;
 
 class EDecoder implements ObjectInput {
@@ -105,6 +108,8 @@ class EDecoder implements ObjectInput {
     private EWrapper m_EWrapper;
     private int m_serverVersion;
 	private IMessageReader m_messageReader;
+	AccountPosition ap=new AccountPosition();//将头寸进行封装
+
 
 	public EDecoder(int serverVersion, EWrapper callback) {
 		this(serverVersion, callback, null);
@@ -1683,6 +1688,8 @@ class EDecoder implements ObjectInput {
 		}
 
 	//	m_EWrapper.position( account, contract, pos, avgCost);
+		ap.addSecurity(account,contract, pos, avgCost);//将contract分类成option 或者 stock
+	
 		m_EWrapper.getPositionExtend(account, contract, pos, avgCost);
 	}
 
