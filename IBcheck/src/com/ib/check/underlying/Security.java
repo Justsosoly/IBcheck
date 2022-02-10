@@ -1,12 +1,20 @@
-package com.ib.check;
+package com.ib.check.underlying;
 
 public abstract class Security {
 	
+	 int conid;
 	 String account;
 	 String secType;
 	 String symbol;
 	 double positon;
 	 double avgCost;
+	 
+	 public int getConid() {
+		return conid;
+	}
+	public void setConid(int conid) {
+		this.conid = conid;
+	}
 	public String getAccount() {
 		return account;
 	}

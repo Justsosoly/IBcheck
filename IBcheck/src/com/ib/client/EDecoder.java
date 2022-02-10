@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.ib.check.AccountPosition;
+import com.ib.check.account.*;
 
 import java.util.Set;
 
@@ -110,7 +110,7 @@ class EDecoder implements ObjectInput {
 	private IMessageReader m_messageReader;
 	AccountPosition ap=new AccountPosition();//将头寸进行封装
 
-
+ 
 	public EDecoder(int serverVersion, EWrapper callback) {
 		this(serverVersion, callback, null);
 	}
@@ -1634,7 +1634,11 @@ class EDecoder implements ObjectInput {
 		}
 
 	//	m_EWrapper.tickOptionComputation( tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
-
+	
+		//将GREEK补充到Secrity的file里
+		ap.addGREEKToFile(tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);//将contract分类成option 或者 stock
+		
+		
 		m_EWrapper.tickOptionDelta( tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
 
 	}
@@ -1688,7 +1692,7 @@ class EDecoder implements ObjectInput {
 		}
 
 	//	m_EWrapper.position( account, contract, pos, avgCost);
-		ap.addSecurity(account,contract, pos, avgCost);//将contract分类成option 或者 stock
+		ap.addSecurityToFile(account,contract, pos, avgCost);//将contract分类成option 或者 stock
 	
 		m_EWrapper.getPositionExtend(account, contract, pos, avgCost);
 	}

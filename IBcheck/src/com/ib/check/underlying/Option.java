@@ -1,8 +1,10 @@
-package com.ib.check;
+package com.ib.check.underlying;
 
 	//期权类型
 	public class Option extends Security
 	{
+		 
+		 int conid;
 		 String account;
 		 String localSymbol;
 		 String secType;
@@ -54,6 +56,14 @@ package com.ib.check;
 	     }
 	     
 	     
+	     
+		 public int getConid() {
+			return conid;
+		}
+
+		public void setConid(int conid) {
+			this.conid = conid;
+		}
 		 public String getAccount() {
 				return account;
 			}

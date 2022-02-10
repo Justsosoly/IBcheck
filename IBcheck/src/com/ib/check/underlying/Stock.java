@@ -1,13 +1,21 @@
-package com.ib.check;
+package com.ib.check.underlying;
 	
 	//股票类型
 	public class Stock extends Security
 	{
+		 int conid;
 		 String account;
 		 String secType;
 		 String symbol;
 		 double positon;
 		 double avgCost;
+		 
+		 public int getConid() {
+			return conid;
+		}
+		public void setConid(int conid) {
+			this.conid = conid;
+		}
 		public String getAccount() {
 			return account;
 		}
