@@ -174,15 +174,15 @@ class EDecoder implements ObjectInput {
             case END_CONN:
                 return 0;
                 
-            case TICK_PRICE://当Eclient里reqmaketdata的时候message里的消息放的也是REQ_MKT_DATA=1
+            case TICK_PRICE://当Eclient里reqmaketdata的时候message里的消息放的也是REQ_MKT_DATA=1  1
                 processTickPriceMsg();
                 break;
 
-            case TICK_SIZE://在获取市场数据的时候进入
+            case TICK_SIZE://在获取市场数据的时候进入 2
                 processTickSizeMsg();
                 break;
 
-            case POSITION://EDecoder中自定义消息号码
+            case POSITION://EDecoder中自定义消息号码 61
                 processPositionMsg();//当message的ID=POSITION的时候调用EWrapperImpl里的getPositionExtend
                 break;
 
@@ -1585,9 +1585,13 @@ class EDecoder implements ObjectInput {
 	}
 //取得期权的delta值
 	private void processTickOptionComputationMsg() throws IOException {
+	
+		
+		
 		int version = readInt();
-		int tickerId = readInt();
-		int tickType = readInt();//从哪得到10，11，12，13这些类型的参数？直接从
+		int tickerId = readInt();//tickerid=conid
+	
+		int tickType = readInt();//从哪得到10，11，12，13这些类型的参数？按固定顺序得到
 		double impliedVol = readDouble();
 		if (Double.compare(impliedVol, -1) == 0) { // -1 is the "not yet computed" indicator
 			impliedVol = Double.MAX_VALUE;//让impliedVol等于无穷大

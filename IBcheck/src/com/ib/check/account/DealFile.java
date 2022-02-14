@@ -2,6 +2,7 @@ package com.ib.check.account;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.Date;
 
+import com.ib.check.underlying.Option;
 import com.ib.check.underlying.Security;
 
 
@@ -22,58 +24,45 @@ public class DealFile {
 	public	 String path_U1001="/Users/jiao/Documents/IBAPI/U10019359/"+date;
 	public 	 String path_U9238="/Users/jiao/Documents/IBAPI/U9238923/"+date;
 		 
-		 
-		    //每天生成不同的文件名
-		    public String FileNameDate()
-		    {
-		    Date date = new Date();
-		    String filedate="";
-
-		    String year = String.format("%tY", date);
-
-		    String month = String.format("%tm", date);
-
-		    String day = String.format("%td", date);
-
-		    filedate=year+month+day;
-		   // System.out.println("今天是："+filedate);
-			
-		    return filedate; 
-		    }
-	
-	
-	
-	
-	//从本地文件读出
-	   public  String ReadFile(String path) {
-	        StringBuffer buffer = new StringBuffer();
-	        try {
-	            BufferedReader bufferedReader = new BufferedReader(
-	                    new InputStreamReader(new FileInputStream(path), "UTF-8"));
-	            String data = null;
-	            while ((data = bufferedReader.readLine()) != null) {
-	            	
-	                buffer.append(data+"\r\n");
-	            }
-	      //      System.out.println("the buffer is :"+buffer);
-	      bufferedReader.close();
-	        } catch (UnsupportedEncodingException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        } catch (FileNotFoundException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        } catch (IOException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        }
-	        return buffer.toString();
-	    }
 	    
+	//getGREEK用，增加判断是否文本里有该conid，有则不写，返回
+	public void   FileWriteGREEK ( Security security,String path)
+	{
+		
+		
+		String filetext=this.ReadFile(path);
+		String conid="conid="+String.valueOf(security.getConid());
+		if(filetext.contains(conid))//如果有该id则跳出
+		{
+			System.out.println("文件里已经写有conid="+conid+"的GREEK，则不再写文件操作");
+			return;
+		}
+		else
+		try {
+            BufferedWriter bufferedWriter = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(path,true), "UTF-8"));   //false则每次都覆盖         
+        
+                bufferedWriter.write((showALLSecurity(security)));
+                bufferedWriter.newLine();//换行
+                bufferedWriter.flush();                   
+                bufferedWriter.close();
+                System.out.println("将conid写进"+security.getConid());	
+  
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+	}
+	   
 	
 	  
-    //将封装对象写入本地文件
-    public   void FileWrite( Security security,String path)
+    //将封装对象写入本地文件,getposition里用
+    public   void FileWritePosition( Security security,String path)
     {
     	
     	try {
@@ -96,8 +85,8 @@ public class DealFile {
     	
     	
     }
-
-    //输出全部头寸信息
+    
+    //输出全部头寸信息，写文件用
     public String showALLSecurity(Security sec)
     {
          String str="";
@@ -109,7 +98,7 @@ public class DealFile {
     	
     }
     
- //将List里的封装对象取出到字符串，写入文件或者打印出来
+ //将List里的封装对象取出到字符串，写入文件或者打印出来，写文件用
     public  String printFieldsValue(Object obj) {
         Field[] fields = obj.getClass().getDeclaredFields();
         String str="";
@@ -127,6 +116,63 @@ public class DealFile {
 		return str;
     }
     	
+       
+	   
+	    //每天生成不同的文件名
+	    public String FileNameDate()
+	    {
+	    Date date = new Date();
+	    String filedate="";
+
+	    String year = String.format("%tY", date);
+
+	    String month = String.format("%tm", date);
+
+	    String day = String.format("%td", date);
+
+	    filedate=year+month+day;
+	   // System.out.println("今天是："+filedate);
+		
+	    return filedate; 
+	    }
+
+
+
+
+//从本地文件读出
+  public  String ReadFile(String path) {
+	  StringBuffer buffer = new StringBuffer();
+	  File file=new File(path);  
+	    if(file.exists())  
+	    { 
+	 
+       try {
+           BufferedReader bufferedReader = new BufferedReader(
+                   new InputStreamReader(new FileInputStream(path), "UTF-8"));
+           String data = null;
+           while ((data = bufferedReader.readLine()) != null) {
+           	
+               buffer.append(data+"\r\n");
+           }
+     //      System.out.println("the buffer is :"+buffer);
+     bufferedReader.close();
+       } catch (UnsupportedEncodingException e) {
+           // TODO Auto-generated catch block
+           e.printStackTrace();
+       } catch (FileNotFoundException e) {
+           // TODO Auto-generated catch block
+           e.printStackTrace();
+       } catch (IOException e) {
+           // TODO Auto-generated catch block
+           e.printStackTrace();
+       }
+	    }
+       return buffer.toString();
+   }
+	   
+	   
+
+   
     public static void main(String args[])
     {
     	DealFile dealfile=new DealFile();

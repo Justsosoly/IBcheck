@@ -86,14 +86,14 @@ public class EWrapperImpl implements EWrapper {
 	@Override
 	
 	public void tickGeneric(int tickerId, int tickType, double value) {
-		System.out.println("Tick Generic. Ticker Id:" + tickerId + ", Field: " + TickType.getField(tickType) + ", Value: " + value);
+	//	System.out.println("Tick Generic. Ticker Id:" + tickerId + ", Field: " + TickType.getField(tickType) + ", Value: " + value);
 	}
 	//! [tickgeneric]
 	
 	//! [tickstring]
 	@Override
 	public void tickString(int tickerId, int tickType, String value) {
-		System.out.println("Tick string. Ticker Id:" + tickerId + ", Type: " + tickType + ", Value: " + value);
+	//	System.out.println("Tick string. Ticker Id:" + tickerId + ", Type: " + tickType + ", Value: " + value);
 	}
 	//! [tickstring]
 	@Override
@@ -312,7 +312,7 @@ public class EWrapperImpl implements EWrapper {
 	//! [marketdatatype]
 	@Override
 	public void marketDataType(int reqId, int marketDataType) {
-		System.out.println("MarketDataType. ["+reqId+"], Type: ["+marketDataType+"]\n");
+//		System.out.println("MarketDataType. ["+reqId+"], Type: ["+marketDataType+"]\n");
 	}
 	//! [marketdatatype]
 	
@@ -551,7 +551,7 @@ public class EWrapperImpl implements EWrapper {
 	//! [tickReqParams]
 	@Override
 	public void tickReqParams(int tickerId, double minTick, String bboExchange, int snapshotPermissions) {
-		System.out.println("Tick req params. Ticker Id:" + tickerId + ", Min tick: " + minTick + ", bbo exchange: " + bboExchange + ", Snapshot permissions: " + snapshotPermissions);
+	//	System.out.println("Tick req params. Ticker Id:" + tickerId + ", Min tick: " + minTick + ", bbo exchange: " + bboExchange + ", Snapshot permissions: " + snapshotPermissions);
 	}
 	//! [tickReqParams]
 

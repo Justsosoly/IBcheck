@@ -14,13 +14,13 @@ package com.ib.check.underlying;
 		 double positon;
 		 double avgCost;
 		 double strikePrice;
-		 int optionPrice;
-		 float delta;
-		 float gamma;
-		 float vega;
-		 float theta;
-		 float imvolatility;
-		 float underlyingPrice;
+		 double optionPrice;
+		 double delta;
+		 double gamma;
+		 double vega;
+		 double theta;
+		 double imvolatility;
+		 double underlyingPrice;
 		 public Option()
 		 {
 			 
@@ -136,59 +136,59 @@ package com.ib.check.underlying;
 				this.strikePrice = strikePrice;
 			}
 
-			public int getOptionPrice() {
+			public double getOptionPrice() {
 				return optionPrice;
 			}
 
-			public void setOptionPrice(int optionPrice) {
+			public void setOptionPrice(double optionPrice) {
 				this.optionPrice = optionPrice;
 			}
 
-			public float getDelta() {
+			public double getDelta() {
 				return delta;
 			}
 
-			public void setDelta(float delta) {
+			public void setDelta(double delta) {
 				this.delta = delta;
 			}
 
-			public float getGamma() {
+			public double getGamma() {
 				return gamma;
 			}
 
-			public void setGamma(float gamma) {
+			public void setGamma(double gamma) {
 				this.gamma = gamma;
 			}
 
-			public float getVega() {
+			public double getVega() {
 				return vega;
 			}
 
-			public void setVega(float vega) {
+			public void setVega(double vega) {
 				this.vega = vega;
 			}
 
-			public float getTheta() {
+			public double getTheta() {
 				return theta;
 			}
 
-			public void setTheta(float theta) {
+			public void setTheta(double theta) {
 				this.theta = theta;
 			}
 
-			public float getImvolatility() {
+			public double getImvolatility() {
 				return imvolatility;
 			}
 
-			public void setImvolatility(float imvolatility) {
+			public void setImvolatility(double imvolatility) {
 				this.imvolatility = imvolatility;
 			}
 
-			public float getUnderlyingPrice() {
+			public double getUnderlyingPrice() {
 				return underlyingPrice;
 			}
 
-			public void setUnderlyingPrice(float underlyingPrice) {
+			public void setUnderlyingPrice(double underlyingPrice) {
 				this.underlyingPrice = underlyingPrice;
 			}
 	     
