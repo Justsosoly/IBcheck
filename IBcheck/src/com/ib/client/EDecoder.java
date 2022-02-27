@@ -1638,12 +1638,21 @@ class EDecoder implements ObjectInput {
 		}
 
 	//	m_EWrapper.tickOptionComputation( tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
-	
-		//将GREEK补充到Secrity的file里
-		ap.addGREEKToFile(tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);//将contract分类成option 或者 stock
-		
-		
 		m_EWrapper.tickOptionDelta( tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
+		//将GREEK补充到Secrity的file里
+		if(tickType==13)
+		{
+		if(delta == Double.MAX_VALUE||gamma==Double.MAX_VALUE||theta==Double.MAX_VALUE||vega==Double.MAX_VALUE||optPrice==Double.MAX_VALUE)
+			{
+			System.out.println(tickerId+"获取的市场数据里有无穷大");
+			return;
+			}
+	
+		else //这些数字全部取出才可以
+			ap.addGREEKToFile(tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);//将contract分类成option 或者 stock
+		}
+		
+		
 
 	}
 
@@ -1768,7 +1777,14 @@ class EDecoder implements ObjectInput {
 		    if (sizeTickType != -1) {
 		        m_EWrapper.tickSize( tickerId, sizeTickType, size);
 		    }
-		}
+		}//end for version>=2
+		//new add 
+		//将price补充到Secrity的file里
+ 		if(tickType==9)//close price
+ 		{
+ 			ap.addStockToFile(tickerId, tickType, price);
+ 		}
+		
 	}
     
     private void processPositionMultiMsg() throws IOException {

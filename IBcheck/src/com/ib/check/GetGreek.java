@@ -6,7 +6,6 @@ import com.ib.client.EClientSocket;
 import com.ib.client.EReader;
 import com.ib.client.EReaderSignal;
 import com.ib.client.EWrapperImpl;
-import com.ib.contracts.ContractSamples;
 
 public class GetGreek {
 	
@@ -17,8 +16,7 @@ public class GetGreek {
 		final EClientSocket m_client = wrapper.getClient();
 		final EReaderSignal m_signal = wrapper.getSignal();
 	
-		
-		AccountPosition accountposition= new AccountPosition();
+
 		m_client.eConnect("127.0.0.1", 7496, 0);
 
 		
@@ -44,16 +42,16 @@ public class GetGreek {
 		
 		//! [reqmarketdatatype]
         /*** Switch to live (1) frozen (2) delayed (3) or delayed frozen (4)***/
-		 wrapper.getClient().reqMarketDataType(2);
+		 wrapper.getClient().reqMarketDataType(2); 
         //! [reqmarketdatatype]
         Thread.sleep(1000);
         AccountPosition accountpositon=new AccountPosition();
-        
-     //   GetGreekbyAccount(wrapper.getClient(),accountpositon.path_U9238);
-     //   Thread.sleep(300000);//300秒后写另一个账户
-        
-        GetGreekbyAccount(wrapper.getClient(),accountpositon.path_U1001);
+     //   GetGreekbyAccount(wrapper.getClient(),accountpositon.path_U1001);
+       GetGreekbyAccount(wrapper.getClient(),accountpositon.path_U9238);
         Thread.sleep(10000);
+        
+
+    //    Thread.sleep(10000);
     
        
     
@@ -66,12 +64,19 @@ public class GetGreek {
 		AccountPosition accountpositon=new AccountPosition(); 
 		int request_num=0;//本地文件返回请求conid的个数
 		
-		//U9238账户将本地文件里的conid全部取出来放到数组里，循环请求
-		 request_num= accountpositon.getSecuityFromFile(path).length;
-        int contractid[]=new int[request_num];
+		//将本地文件里Option的conid全部取出来放到数组里，循环请求
+	//	 request_num= accountpositon.getOptionFromFile(path).length;
+		
+		//取出全部conid，包括stock和option
+		request_num= accountpositon.getSecuityFromFile(path).length;
+		 
+		
+		 int contractid[]=new int[request_num];
         contractid=accountpositon.getSecuityFromFile(path);
 
-        
+        client.reqMktData(2001, getSPXIndex(),"", false, false, null);
+
+        /*
         //取得本地文件里的conid，挨个请求市场数据
         for(int i=0;i<request_num;i++)
         {      	
@@ -79,10 +84,20 @@ public class GetGreek {
         
         	client.reqMktData(contractid[i], contractByID(contractid[i]),"", false, false, null);//返回一堆参数Tick AAPL Price size field   
         	System.out.println("第"+i+"个请求"+contractid[i]);
-        	Thread.sleep(1000);//10秒
+        	Thread.sleep(100);//1秒
      	}
+     	*/
 	}
 	
+	public static Contract getSPXIndex() 
+	{
+		Contract contract = new Contract();
+		contract.secType("IND") ;
+		contract.symbol("SPX");
+		contract.exchange("CBOE");
+		contract.currency("USD");
+		return contract;
+	}
 	
 	public static Contract contractByID(int contractid) {
 

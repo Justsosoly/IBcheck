@@ -1,6 +1,5 @@
 package com.ib.check.account;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import com.ib.client.Contract;
@@ -8,53 +7,53 @@ import com.ib.check.underlying.*;
 
 import org.apache.commons.lang3.*;
 
-
 /*把request position后get过来的contract 放到List中 
 Option为期权类型
 Stock为股票类型 
 Account为多个账户
 */
 public class AccountPosition {
+
+	DealFile dealfile = new DealFile();
+	public String path_U1001 = dealfile.path_U1001;
+	public String path_U9238 = dealfile.path_U9238;
+	public String path_U9238GREEK = dealfile.path_U9238 + "GREEK";
+	public String path_U1001GREEK = dealfile.path_U1001 + "GREEK";
 	
+	public  String path=path_U1001;
+//	public String path=path_U9238;
+	public String pathGREEK=path+"GREEK";
+
 	
-	DealFile dealfile=new DealFile();
-public	String path_U1001=dealfile.path_U1001;
-public 	String path_U9238=dealfile.path_U9238;
-public 	String path_U9238GREEK=dealfile.path_U9238+"GREEK";
-public 	String path_U1001GREEK=dealfile.path_U1001+"GREEK";
-	
-	//whole account
+	// whole account
 	List<Option> optionList = new ArrayList<Option>();
 	List<Stock> stockList = new ArrayList<Stock>();
-	List<Security> securityList=new ArrayList<Security>();//全部头寸都进入此
+	List<Security> securityList = new ArrayList<Security>();// 全部头寸都进入此
 
-	//stock account
+	// stock account
 	List<Option> optionList_U1001 = new ArrayList<Option>();
 	List<Stock> stockList_U1001 = new ArrayList<Stock>();
-	//List<Security> securityList_Stock=new ArrayList<Security>();
-	
-	//ETF account
+	// List<Security> securityList_Stock=new ArrayList<Security>();
+
+	// ETF account
 	List<Option> optionList_U9238 = new ArrayList<Option>();
 	List<Stock> stockList_U9238 = new ArrayList<Stock>();
-	//List<Security> securityList_ETF=new ArrayList<Security>();
-	
-	
+	// List<Security> securityList_ETF=new ArrayList<Security>();
+
 	List<Contract> contratList_U9238 = new ArrayList<Contract>();
 	List<Contract> contratList_U1001 = new ArrayList<Contract>();
-	
-  
-	int call_count=0;//期权call计数
-	int put_count=0;//期权put计数
-	int total_op=0;
-	int total_stock=0;
-	int total_secruity=0;
- 
 
-	//获取市场数据，主要把GREEK信息再补充到本地文件
-	public void addGREEKToFile(int tickerId, int tickType,double impliedVol,double delta,double optPrice,double pvDividend,double gamma,double vega,double theta,double undPrice)
-	{
-		//把Greek先放到Option对象中
-		Option option_Greek=new Option();
+	int call_count = 0;// 期权call计数
+	int put_count = 0;// 期权put计数
+	int total_op = 0;
+	int total_stock = 0;
+	int total_secruity = 0;
+
+	// 获取市场数据，主要把GREEK信息再补充到本地文件
+	public void addGREEKToFile(int tickerId, int tickType, double impliedVol, double delta, double optPrice,
+			double pvDividend, double gamma, double vega, double theta, double undPrice) {
+		// 把Greek先放到Option对象中
+		Option option_Greek = new Option();
 		option_Greek.setConid(tickerId);
 		option_Greek.setImvolatility(impliedVol);
 		option_Greek.setDelta(delta);
@@ -62,231 +61,307 @@ public 	String path_U1001GREEK=dealfile.path_U1001+"GREEK";
 		option_Greek.setGamma(gamma);
 		option_Greek.setVega(vega);
 		option_Greek.setTheta(theta);
-		option_Greek.setUnderlyingPrice(undPrice);				
+		option_Greek.setUnderlyingPrice(undPrice);
 
-        String filetext="";//取出本地文件	
-        int i=0;//按本地文件行走
-	    int j=0;//按本地文件1行再分开走
-	    
-	    
-		String filetext_U9238=dealfile.ReadFile(path_U9238);
-		String filetext_U1001=dealfile.ReadFile(path_U1001);
-		
-		if(filetext_U9238.contains("conid="+option_Greek.getConid()))
-		{
-			filetext=filetext_U9238;
-		}
-		else if(filetext_U1001.contains("conid="+option_Greek.getConid()))
-		{
-			filetext=filetext_U1001;
-		}
-		
-			
-		String[] row = filetext.split("\\r\\n");//转义
+		String filetext = "";// 取出本地文件
+		int i = 0;// 按本地文件行走
+		int j = 0;// 按本地文件1行再分开走
 
-	  
-	        for(i=0;i<row.length;i++)//进入文本里，每次一行记录开始循环
-	        {                                       
-	        //    System.out.println("第"+i+"行记录"+row[i]);
-	        
-	            String str=row[i]; //str为一行的内容   
-	            String conidunit=StringUtils.substringBefore(row[i],"|");//将conid=123456789取出给conidunit
-	            
-	          
-	            	
-	       //    if( str.contains("conid="+tickerId))//循环匹配到有该conid的这行记录
-	            if(conidunit.equalsIgnoreCase("conid="+tickerId))//字符串完全相等的情况，而不是包含的情况进入
-	           {      	 
-	        	   
-	        	   String contract[]=str.split("\\|");
-	        	   for(j=0;j<contract.length;j++)
-	        	   {
-	        		 String unit[]=contract[j].split("=");
-	        		   
-	        		if(contract[j].contains("account"))
-	        		{ 	  
-	   	    		option_Greek.setAccount(unit[1]);continue;	        			
-	        		}
-	        		if(contract[j].contains("localSymbol"))
-	        		{
-	        			option_Greek.setLocalSymbol(unit[1]);continue;
-	        		}
-	        		if(contract[j].contains("secType"))
-	        		{
-	        			option_Greek.setSecType(unit[1]);continue;
-	        		}
-	        		if(contract[j].contains("right"))
-	        		{
-	        			option_Greek.setRight(unit[1]);continue;
-	        		}
-	        		if(contract[j].contains("symbol"))
-	        		{
-	        			option_Greek.setSymbol(unit[1]);continue;
-	        		}
-	        		if(contract[j].contains("date"))
-	        		{
-	        			option_Greek.setDate(unit[1]);continue;
-	        		}
-	        		if(contract[j].contains("positon"))
-	        		{
-	        			option_Greek.setPositon(Double.valueOf(unit[1]));continue;	
-	        		}	
-	        		if(contract[j].contains("avgCost"))
-	        		{
-	        			option_Greek.setAvgCost(Double.valueOf(unit[1]));continue;
-	        		}
-	        		if(contract[j].contains("strikePrice"))
-	        		{
-	        			option_Greek.setStrikePrice(Double.valueOf(unit[1]));continue;
-	        		}
-	        	        		
-	        		   
-	        	   }
-	        	   
-                 break;//每次循环进入文本的记录，只会有1个conid相匹配的情况，找到就结束循环
-	           }   
-	            
-	        }
-		   
-		    //根据账户信息进行判断，分别写到各自的GREEK文件里
-		   
-		    switch( option_Greek.getAccount()) {
-		      
-            
-	         case "U10019359":
-	        	 dealfile.FileWriteGREEK(option_Greek,path_U1001GREEK);//每次写一个option到文件里
-	             break;
-	       
-	         case "U9238923":
-	        	 dealfile.FileWriteGREEK(option_Greek,path_U9238GREEK);//每次写一个option到文件里
-	             break;
-	    	 }
-		    
-		    
-		    
-		 
-		    
-	        
+		filetext = dealfile.ReadFile(path);
+	
 		
-	}
+
+		String[] row = filetext.split("\\r\\n");// 转义
+
+		for (i = 0; i < row.length; i++)// 进入文本里，每次一行记录开始循环
+		{
+			// System.out.println("第"+i+"行记录"+row[i]);
+
+			String str = row[i]; // str为一行的内容
+			String conidunit = StringUtils.substringBefore(row[i], "|");// 将conid=123456789取出给conidunit
+
+			// if( str.contains("conid="+tickerId))//循环匹配到有该conid的这行记录
+			if (conidunit.equalsIgnoreCase("conid=" + tickerId))// 有重复记录，则把op其他补全
+			{
+
+				String contract[] = str.split("\\|");
+				for (j = 0; j < contract.length; j++) {
+					String unit[] = contract[j].split("=");
+
+					if (contract[j].contains("account")) {
+						option_Greek.setAccount(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("localSymbol")) {
+						option_Greek.setLocalSymbol(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("secType")) {
+						option_Greek.setSecType(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("right")) {
+						option_Greek.setRight(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("symbol")) {
+						option_Greek.setSymbol(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("date")) {
+						option_Greek.setDate(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("positon")) {
+						option_Greek.setPositon(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("avgCost")) {
+						option_Greek.setAvgCost(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("strikePrice")) {
+						option_Greek.setStrikePrice(Double.valueOf(unit[1]));
+						continue;
+					}
+
+					// else break;//每次循环进入文本的记录，只会有1个conid相匹配的情况，找到就结束循环
+				}
+
+			} // end if
+
+		}
+		dealfile.FileWriteGREEK(option_Greek, pathGREEK);
 	
 
-	//从本地文件读出某账户的全部头寸，并封装成Contract类。并不需要全部读取，只要OPTION的才需要再去读市场数据
-	public  int[] getSecuityFromFile(String path)
-	{
+	}
+
+	
+	
+	// 获取市场数据，主要把价格信息补充到本地文件里 ,在edecoder里调用
+		public void addStockToFile(int tickerId, int tickType, double price) {
+			
+			Stock stock=new Stock();
+			//把市场价格放到stock对象中
+			stock.setPrice(price);
+			stock.setConid(tickerId);
+
+			String filetext = "";// 取出本地文件
+			int i = 0;// 按本地文件行走
+			int j = 0;// 按本地文件1行再分开走
+
+			filetext = dealfile.ReadFile(path);
+		//	 filetext=dealfile.ReadFile(path_U1001); //手工开关，因为后台监听区分不了账户
+	
+
+			String[] row = filetext.split("\\r\\n");// 转义
+
+			for (i = 0; i < row.length; i++)// 进入文本里，每次一行记录开始循环
+			{
+				// System.out.println("第"+i+"行记录"+row[i]);
+
+				String str = row[i]; // str为一行的内容
+				String conidunit = StringUtils.substringBefore(row[i], "|");// 将conid=123456789取出给conidunit
+
+				//该行记录为stk记录才按补价格的stock处理
+				if(str.contains("secType=STK"))
+				{
+					if (conidunit.equalsIgnoreCase("conid=" + tickerId))// 只记录一次，保障不重复，把stock价格补全
+					{
+
+						String contract[] = str.split("\\|");
+						for (j = 0; j < contract.length; j++) {
+							String unit[] = contract[j].split("=");
+
+							if (contract[j].contains("account")) {
+								stock.setAccount(unit[1]);
+								continue;
+							}
+							if (contract[j].contains("secType")) {
+								stock.setSecType(unit[1]);
+								continue;
+							}
+				
+							if (contract[j].contains("symbol")) {
+								stock.setSymbol(unit[1]);
+								continue;
+							}
+							if (contract[j].contains("positon")) {
+								stock.setPositon(Double.valueOf(unit[1]));
+								continue;
+							}
+				
+							if (contract[j].contains("avgCost")) {
+								stock.setAvgCost(Double.valueOf(unit[1]));
+								continue;
+							}
+						}//end for
+
+					} // end if	
+					
+				}	
+			}
+
+			dealfile.FileWriteGREEK(stock, pathGREEK);
+			/*
+			// 补全stock全部根据账户信息进行判断，分别写到各自的GREEK文件里
+			switch (stock.getAccount()) {
+
+			case "U10019359":
+				dealfile.FileWriteGREEK(stock, path_U1001GREEK);// 每次写一个option到文件里
+				break;
+
+			case "U9238923":
+				dealfile.FileWriteGREEK(stock, path_U9238GREEK);// 每次写一个option到文件里
+				break;
+			}
+       */
+		}
+	
+	
+	
+	
+	
+	// 从本地文件读出某账户的全部头寸，把conid封成数组返回。
+	public int[] getSecuityFromFile(String path) {
 		String filetext;
 		List<Integer> list = new ArrayList<>();
-		filetext=dealfile.ReadFile(path);
-		//System.out.println("the text content is: "+filetext);
+		filetext = dealfile.ReadFile(path);
+	
+
+		String[] record = filetext.split("\\r\\n");// 转义
+		int[] contractid = new int[record.length];
+		int i = 0;
+
+	
+		for (i = 0; i < record.length; i++)// 将每行的conid提取出来
+		{
 		
-		String[] record = filetext.split("\\r\\n");//转义
-		int[] contractid=null; 
-	    int i=0;
-	    int j=0;
-	        for(i=0;i<record.length;i++)//将每行的conid提取出来
-	        {                                       
-	          //  System.out.println("record[i] is "+record[i]);
-	            //如果recond[i]中含有secType=OPT，则计入contractid[],否则跳出循环
-	        	if(record[i].contains("secType=OPT"))
-	        	{
-	            String conidString=StringUtils.substringBefore(record[i],"|");
-	          //  System.out.println("conidString is"+conidString);
-	           if( conidString.contains("conid="))//只需要取conid的内容
-	           {      	 
-	        	   String str[]=conidString.split("=");
-	       
-	        	   Integer.parseInt(str[1]);
-	        	//   j++;
-	        	  //将
-	        	   list.add(Integer.parseInt(str[1]));
-	 	        	   
-	        	//   System.out.println("第"+j+"个：conid="+str[1]);//取conid等号右边的数
-	           }   
-	        	}
-	        	else continue;
-	        }
-	  	    contractid =new int[list.size()];
-       	    for(j=0;j<list.size();j++)
-       		 contractid[j]= list.get(j);
+			
+				String conidString = StringUtils.substringBefore(record[i], "|");
+			
+				if (conidString.contains("conid="))// 只需要取conid的内容
+				{
+					String str[] = conidString.split("=");
+					contractid[i] = Integer.parseInt(str[1]);;
+				}
 		
-		return contractid;
+		}//end for 
+		
+	return contractid;
 
 	}
- 
 	
 	
-	
-	
-    //新增一个期权or股票并进行分类封装,并写入本地文件里
-    public void addSecurityToFile(String account,Contract contract,double position,double avgCost)
-    {
-        
-    	 switch( account) {
-      
-             
-         case "U10019359":
-             processAccountU1001(account, contract, position, avgCost);
-             break;
-       
-         case "U9238923":
-             processAccountU9238(account, contract, position, avgCost);
-             break;
-    	 }
-    	 
-    		total_secruity=total_stock+total_op;
-    		System.out.println("Total secruity :"+total_secruity);
- 
-    
-    }
-    
-    
-    
-    
+	// 从本地文件读出某账户的全部头寸，并封装成Contract类。并不需要全部读取，只要OPTION的才需要再去读市场数据
+		public int[] getOptionFromFile(String path) {
+			String filetext;
+			List<Integer> list = new ArrayList<>();
+			filetext = dealfile.ReadFile(path);
+			// System.out.println("the text content is: "+filetext);
 
+			String[] record = filetext.split("\\r\\n");// 转义
+			int[] contractid = null;
+			int i = 0;
+			int j = 0;
+		
+			for (i = 0; i < record.length; i++)// 将每行的conid提取出来
+			{
+				// System.out.println("record[i] is "+record[i]);
+			
+				// 如果recond[i]中含有secType=OPT，则计入contractid[],否则跳出循环
+				if (record[i].contains("secType=OPT")) {
+					String conidString = StringUtils.substringBefore(record[i], "|");
+					// System.out.println("conidString is"+conidString);
+					if (conidString.contains("conid="))// 只需要取conid的内容
+					{
+						String str[] = conidString.split("=");
+
+						Integer.parseInt(str[1]);
+						// j++;
+						// 将
+						list.add(Integer.parseInt(str[1]));
+
+						// System.out.println("第"+j+"个：conid="+str[1]);//取conid等号右边的数
+					}
+				} else
+					continue;
+			}//end for 
+			
+			contractid = new int[list.size()];
+			for (j = 0; j < list.size(); j++)
+				contractid[j] = list.get(j);
+
+			return contractid;
+
+		}
 	
-	 public void processAccountU1001(String account,Contract contract,double position,double avgCost)
-	 {
-		if (contract.getSecType().equalsIgnoreCase("OPT"))
-		{
-			Option op= new Option();
+	
+	
+
+	// 新增一个期权or股票并进行分类封装,并写入本地文件里
+	public void addSecurityToFile(String account, Contract contract, double position, double avgCost) {
+
 		
-			op.setConid(contract.conid());
-			op.setAccount(account);
-	    	op.setSymbol(contract.symbol());
-	    	op.setSecType(contract.getSecType());
-	        op.setRight(contract.getRight());
-	        op.setPositon(position);
-	        op.setAvgCost(avgCost);
-	        op.setLocalSymbol(contract.localSymbol());
-	        op.setDate(contract.lastTradeDateOrContractMonth());
-	        op.setStrikePrice(contract.strike());			
-			
-			if(contract.getRight().equalsIgnoreCase("C"))//为call
-				
-			{
-				call_count++;
-				System.out.println("Total Call Option: "+call_count);
-			}
-			
-			if(contract.getRight().equalsIgnoreCase("P"))//为put
-			{
-				put_count++;
-				System.out.println("Total Put Option: "+put_count);
-			}
-			total_op=put_count+call_count;
-			System.out.println("Total Option :"+total_op);
-			 optionList_U1001.add(op);//增加stock account期权记录	
 		
-			 securityList.add(op);//增加全账户全类型记录
-			 dealfile.FileWritePosition(op,path_U1001);//写到本地文件
+		
+		switch (account) {
+
+		case "U10019359":
+			processAccountU1001(account, contract, position, avgCost);
+			break;
+
+		case "U9238923":
+			processAccountU9238(account, contract, position, avgCost);
+			break;
 		}
 		
 		
-       //如果判断头寸为STK则封装成Stock并添加到List里             
-		if (contract.getSecType().equalsIgnoreCase("STK"))
-		{
-			Stock stock=new Stock();
-			
+
+		total_secruity = total_stock + total_op;
+		System.out.println("Total secruity :" + total_secruity);
+
+	}
+
+	public void processAccountU1001(String account, Contract contract, double position, double avgCost) {
+		if (contract.getSecType().equalsIgnoreCase("OPT")) {
+			Option op = new Option();
+
+			op.setConid(contract.conid());
+			op.setAccount(account);
+			op.setSymbol(contract.symbol());
+			op.setSecType(contract.getSecType());
+			op.setRight(contract.getRight());
+			op.setPositon(position);
+			op.setAvgCost(avgCost);
+			op.setLocalSymbol(contract.localSymbol());
+			op.setDate(contract.lastTradeDateOrContractMonth());
+			op.setStrikePrice(contract.strike());
+
+			if (contract.getRight().equalsIgnoreCase("C"))// 为call
+
+			{
+				call_count++;
+				System.out.println("Total Call Option: " + call_count);
+			}
+
+			if (contract.getRight().equalsIgnoreCase("P"))// 为put
+			{
+				put_count++;
+				System.out.println("Total Put Option: " + put_count);
+			}
+			total_op = put_count + call_count;
+			System.out.println("Total Option :" + total_op);
+			optionList_U1001.add(op);// 增加stock account期权记录
+
+			securityList.add(op);// 增加全账户全类型记录
+			dealfile.FileWritePosition(op, path_U1001);// 写到本地文件
+		}
+
+		// 如果判断头寸为STK则封装成Stock并添加到List里
+		if (contract.getSecType().equalsIgnoreCase("STK")) {
+			Stock stock = new Stock();
+
 			stock.setConid(contract.conid());
 			stock.setAccount(account);
 			stock.setSymbol(contract.symbol());
@@ -294,63 +369,57 @@ public 	String path_U1001GREEK=dealfile.path_U1001+"GREEK";
 			stock.setPositon(position);
 			stock.setAvgCost(avgCost);
 			total_stock++;
-			System.out.println("Total stock :"+total_stock);
-			stockList_U1001.add(stock);//增加stock account股票记录
-			dealfile.FileWritePosition(stock,path_U1001);//写到本地文件
-			securityList.add(stock);//增加全类型
+			System.out.println("Total stock :" + total_stock);
+			stockList_U1001.add(stock);// 增加stock account股票记录
+			dealfile.FileWritePosition(stock, path_U1001);// 写到本地文件
+			securityList.add(stock);// 增加全类型
 		}
-		 if(contract.getSecType().isEmpty())
-			 System.out.println("SecType is empty"+contract.conid());
-		 
-	 }
-	 
-	 
-	 
-	 public void processAccountU9238(String account,Contract contract,double position,double avgCost)
-	 {
-	
-		//如果判断头寸为期权则封装成Option类并加到List里
-		if (contract.getSecType().equalsIgnoreCase("OPT"))
-		{
-			Option op= new Option();
-		
+		if (contract.getSecType().isEmpty())
+			System.out.println("SecType is empty" + contract.conid());
+
+	}
+
+	public void processAccountU9238(String account, Contract contract, double position, double avgCost) {
+
+		// 如果判断头寸为期权则封装成Option类并加到List里
+		if (contract.getSecType().equalsIgnoreCase("OPT")) {
+			Option op = new Option();
+
 			op.setConid(contract.conid());
 			op.setAccount(account);
-	    	op.setSymbol(contract.symbol());
-	    	op.setSecType(contract.getSecType());
-	        op.setRight(contract.getRight());
-	        op.setPositon(position);
-	        op.setAvgCost(avgCost);
-	        op.setLocalSymbol(contract.localSymbol());
-	        op.setDate(contract.lastTradeDateOrContractMonth());
-	        op.setStrikePrice(contract.strike());			
-			
-			if(contract.getRight().equalsIgnoreCase("C"))//为call
-				
+			op.setSymbol(contract.symbol());
+			op.setSecType(contract.getSecType());
+			op.setRight(contract.getRight());
+			op.setPositon(position);
+			op.setAvgCost(avgCost);
+			op.setLocalSymbol(contract.localSymbol());
+			op.setDate(contract.lastTradeDateOrContractMonth());
+			op.setStrikePrice(contract.strike());
+
+			if (contract.getRight().equalsIgnoreCase("C"))// 为call
+
 			{
 				call_count++;
-				System.out.println("Total Call Option: "+call_count);
+				System.out.println("Total Call Option: " + call_count);
 			}
-			
-			if(contract.getRight().equalsIgnoreCase("P"))//为put
+
+			if (contract.getRight().equalsIgnoreCase("P"))// 为put
 			{
 				put_count++;
-				System.out.println("Total Put Option: "+put_count);
+				System.out.println("Total Put Option: " + put_count);
 			}
-			total_op=put_count+call_count;
-			System.out.println("Total Option :"+total_op);
-			optionList_U9238.add(op);//增加stock account期权记录	
-		
-			 securityList.add(op);//增加全账户全类型记录
-			 dealfile.FileWritePosition(op,path_U9238);//写到本地文件
+			total_op = put_count + call_count;
+			System.out.println("Total Option :" + total_op);
+			optionList_U9238.add(op);// 增加stock account期权记录
+
+			securityList.add(op);// 增加全账户全类型记录
+			dealfile.FileWritePosition(op, path_U9238);// 写到本地文件
 		}
-		
-		
-        //如果判断头寸为STK则封装成Stock并添加到List里             
-		if (contract.getSecType().equalsIgnoreCase("STK"))
-		{
-			Stock stock=new Stock();
-			
+
+		// 如果判断头寸为STK则封装成Stock并添加到List里
+		if (contract.getSecType().equalsIgnoreCase("STK")) {
+			Stock stock = new Stock();
+
 			stock.setConid(contract.conid());
 			stock.setAccount(account);
 			stock.setSymbol(contract.symbol());
@@ -358,37 +427,35 @@ public 	String path_U1001GREEK=dealfile.path_U1001+"GREEK";
 			stock.setPositon(position);
 			stock.setAvgCost(avgCost);
 			total_stock++;
-			System.out.println("Total stock :"+total_stock);
-			stockList_U9238.add(stock);//增加stock account股票记录
-			dealfile.FileWritePosition(stock,path_U9238);//写到本地文件
-			securityList.add(stock);//增加全类型
+			System.out.println("Total stock :" + total_stock);
+			stockList_U9238.add(stock);// 增加stock account股票记录
+			dealfile.FileWritePosition(stock, path_U9238);// 写到本地文件
+			securityList.add(stock);// 增加全类型
 		}
-		
-		 if(contract.getSecType().isEmpty())
-			 System.out.println("SecType is empty"+contract.conid());
-		 
 
-	 }
-	 
-	 
-    
-	 
-	    public static void main(String args[])
-	    {
-	    	AccountPosition accpositon= new AccountPosition();
-	    	try {
-				accpositon.getSecuityFromFile(accpositon.path_U9238);
-				
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
-	    }
-    
+		if (contract.getSecType().isEmpty())
+			System.out.println("SecType is empty" + contract.conid());
 
-    	
-    }
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
+	public static void main(String args[]) {
+		AccountPosition accpositon = new AccountPosition();
+		try {
+			accpositon.getSecuityFromFile(accpositon.path_U9238);
 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+}

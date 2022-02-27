@@ -15,6 +15,7 @@ public class GetPosition {
 		final EReaderSignal m_signal = wrapper.getSignal();
 
 		m_client.eConnect("127.0.0.1", 7496, 0);
+	//	m_client.eConnect("127.0.0.1", 4001, 1);
 
 		//! [ereader]
 		final EReader reader = new EReader(m_client, m_signal);   

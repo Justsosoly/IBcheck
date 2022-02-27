@@ -47,7 +47,7 @@ public class RiskCheck {
 
 //		tickByTickOperations(wrapper.getClient());//后台读取市场数据，系统实时报价
 //    	tickDataOperations(wrapper.getClient());//reqContractDetails,reqMktData方法获取期权相关信息
-//		tickOptionComputations(wrapper.getClient());//获取期权delta等相关信息
+		tickOptionComputations(wrapper.getClient());//获取期权delta等相关信息
 //		orderOperations(wrapper.getClient(), wrapper.getCurrentOrderId());//需要写权限，订单
 //		contractOperations(wrapper.getClient());//可以通过reqContractDetails获取期权相关信息
 //		hedgeSample(wrapper.getClient(), wrapper.getCurrentOrderId());//需要写权限，订单

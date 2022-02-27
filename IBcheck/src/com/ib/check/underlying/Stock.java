@@ -9,8 +9,15 @@ package com.ib.check.underlying;
 		 String symbol;
 		 double positon;
 		 double avgCost;
+		 double price;
 		 
-		 public int getConid() {
+		 public double getPrice() {
+			return price;
+		}
+		public void setPrice(double price) {
+			this.price = price;
+		}
+		public int getConid() {
 			return conid;
 		}
 		public void setConid(int conid) {
