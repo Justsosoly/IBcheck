@@ -16,6 +16,7 @@ import java.util.Date;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -37,10 +38,10 @@ public class DealFile {
 	public String path_U1001GREEK = path_U1001 + "GREEK";
 	public String FILE_NAME = "/Users/jiao/Documents/IBAPI/DailyCheckExcel.xlsx";
 
-	// getGREEK用，增加判断是否文本里有该conid，有则不写，返回
-	public void FileWriteGREEK(Security security, String path) {
-
-		String filetext = this.ReadFile(path);
+	//该方法只新建不更新 getGREEK用，增加判断是否文本里有该conid，有则不写，返回
+	public void FileWriteGREEK(Security security, String pathGREEK) {
+	
+		String filetext = this.ReadFile(pathGREEK);
 		String conid = "conid=" + String.valueOf(security.getConid());
 		if (filetext.contains(conid))// 如果有该id则跳出
 		{
@@ -49,7 +50,7 @@ public class DealFile {
 		} else
 			try {
 				BufferedWriter bufferedWriter = new BufferedWriter(
-						new OutputStreamWriter(new FileOutputStream(path, true), "UTF-8")); // false则每次都覆盖
+						new OutputStreamWriter(new FileOutputStream(pathGREEK, true), "UTF-8")); // false则每次都覆盖
 
 				bufferedWriter.write((showALLSecurity(security)));
 				bufferedWriter.newLine();// 换行
@@ -64,8 +65,10 @@ public class DealFile {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		//end if file exist
 
 	}
+
 
 	// 将封装对象写入本地文件,getposition功能里会调用
 	public void FileWritePosition(Security security, String path) {
@@ -161,7 +164,7 @@ public class DealFile {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}//end if 
 		return buffer.toString();
 	}
 
@@ -183,11 +186,19 @@ public class DealFile {
 
 			Object[][] datatypes = { { this.FileNameDate(),
 				account.getAccount(),
+				
+				account.getNasdaq(),
+				account.getSpx(),
+				
 				account.getPortfolioDelta(), 
 				account.getStock_delta(),
 				account.getOption_delta(),
+				
+				account.getSpx_delta(),
 				account.getPortfoliotheta(),
 				account.getPortfoliovega(),
+				account.getPortfolioGamma(),
+				
 				account.getOp_num(),
 				account.getPortfolio_cost(),
 				
@@ -260,82 +271,98 @@ public class DealFile {
 			headerCell.setCellValue("Date");
 			headerCell = header.createCell(1);
 			headerCell.setCellValue("Account");
-			
-			
+		
 			headerCell = header.createCell(2);
-			headerCell.setCellValue("PortfolioDelta");
+			headerCell.setCellValue("NASDAQ");
 			headerCell = header.createCell(3);
-			headerCell.setCellValue("Stock Delta");
+			headerCell.setCellValue("SPX");
+			
+			
 			headerCell = header.createCell(4);
+			headerCell.setCellValue("PortfolioDelta");
+			headerCell = header.createCell(5);
+			headerCell.setCellValue("Stock Delta");
+			headerCell = header.createCell(6);
 			headerCell.setCellValue("Option Delta");
 			
-			headerCell = header.createCell(5);
-			headerCell.setCellValue("PortfolioTheta");
-			headerCell = header.createCell(6);
-			headerCell.setCellValue("PortfolioVega");
-
 			headerCell = header.createCell(7);
-			headerCell.setCellValue("Option Num");
+			headerCell.setCellValue("SPXDelta");
 			headerCell = header.createCell(8);
+			headerCell.setCellValue("PortfolioTheta");
+			headerCell = header.createCell(9);
+			headerCell.setCellValue("PortfolioVega");
+			headerCell = header.createCell(10);
+			headerCell.setCellValue("PortfolioGamma");
+			
+
+			headerCell = header.createCell(11);
+			headerCell.setCellValue("Option Num");
+			headerCell = header.createCell(12);
 			headerCell.setCellValue("Total Option Cost");
 			
 			
-			headerCell = header.createCell(9);
+			headerCell = header.createCell(13);
 			headerCell.setCellValue("Total Put Delta");
-			headerCell = header.createCell(10);
+			headerCell = header.createCell(14);
 			headerCell.setCellValue("Put Num");
-			headerCell = header.createCell(11);
+			headerCell = header.createCell(15);
 			headerCell.setCellValue("Put Cost");
 			
 			
-			headerCell = header.createCell(12);
+			headerCell = header.createCell(16);
 			headerCell.setCellValue("Total Call Delta");
-			headerCell = header.createCell(13);
+			headerCell = header.createCell(17);
 			headerCell.setCellValue("Call Num");
-			headerCell = header.createCell(14);
+			headerCell = header.createCell(18);
 			headerCell.setCellValue("Call Cost");
 			
 		
-			headerCell = header.createCell(15);
+			headerCell = header.createCell(19);
 			headerCell.setCellValue("Total Short Put Delta");
-			headerCell = header.createCell(16);
+			headerCell = header.createCell(20);
 			headerCell.setCellValue("Total Short Put Num");
-			headerCell = header.createCell(17);
+			headerCell = header.createCell(21);
 			headerCell.setCellValue("Total Short Put Cost");
 			
 			
-			headerCell = header.createCell(18);
+			headerCell = header.createCell(22);
 			headerCell.setCellValue("Total Long Call Delta");
-			headerCell = header.createCell(19);
+			headerCell = header.createCell(23);
 			headerCell.setCellValue("Total Long Call Num");
-			headerCell = header.createCell(20);
+			headerCell = header.createCell(24);
 			headerCell.setCellValue("Total Long Call Cost");
 			
 
-			headerCell = header.createCell(21);
+			headerCell = header.createCell(25);
 			headerCell.setCellValue("Total Short Call Delta");
-			headerCell = header.createCell(22);
+			headerCell = header.createCell(26);
 			headerCell.setCellValue("Total Short Call Num");
-			headerCell = header.createCell(23);
+			headerCell = header.createCell(27);
 			headerCell.setCellValue("Total Short Call Cost");
 			
 			
-			headerCell = header.createCell(24);
+			headerCell = header.createCell(28);
 			headerCell.setCellValue("Total Long Put Delta");
-			headerCell = header.createCell(25);
+			headerCell = header.createCell(29);
 			headerCell.setCellValue("Total Long Put Num");
-			headerCell = header.createCell(26);
+			headerCell = header.createCell(30);
 			headerCell.setCellValue("Total Long Put Cost");
 		
 
 
 			Object[][] datatypes = { { this.FileNameDate(),
 				account.getAccount(),
+				
+				account.getNasdaq(),
+				account.getSpx(),
+				
 				account.getPortfolioDelta(), 
 				account.getStock_delta(),
 				account.getOption_delta(),
+				account.getSpx_delta(),
 				account.getPortfoliotheta(),
 				account.getPortfoliovega(),
+				account.getPortfolioGamma(),
 				account.getOp_num(),
 				account.getPortfolio_cost(),
 				
@@ -411,7 +438,7 @@ public class DealFile {
 		List<Option> opList = new ArrayList<Option>();
 	//	opList = daydelta.getALLOP(dealfile.path_U1001GREEK);
 		opList = daydelta.getALLOP(dealfile.path_U9238GREEK);
-		dealfile.ResultWriteTOExcel(daydelta.getOPTPflioDelta(opList));
+	//	dealfile.ResultWriteTOExcel(daydelta.getOPTPflioDelta(opList));
 	}
 
 }

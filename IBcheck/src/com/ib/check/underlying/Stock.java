@@ -7,7 +7,7 @@ package com.ib.check.underlying;
 		 String account;
 		 String secType;
 		 String symbol;
-		 double positon;
+		 double position;
 		 double avgCost;
 		 double price;
 		 
@@ -41,11 +41,11 @@ package com.ib.check.underlying;
 		public void setSymbol(String symbol) {
 			this.symbol = symbol;
 		}
-		public double getPositon() {
-			return positon;
+		public double getPosition() {
+			return position;
 		}
-		public void setPositon(double positon) {
-			this.positon = positon;
+		public void setPosition(double position) {
+			this.position = position;
 		}
 		public double getAvgCost() {
 			return avgCost;

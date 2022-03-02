@@ -1640,7 +1640,7 @@ class EDecoder implements ObjectInput {
 	//	m_EWrapper.tickOptionComputation( tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
 		m_EWrapper.tickOptionDelta( tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
 		//将GREEK补充到Secrity的file里
-		if(tickType==13)
+		if(tickType==13)//13 Model Option Computation12 Last Option Computation
 		{
 		if(delta == Double.MAX_VALUE||gamma==Double.MAX_VALUE||theta==Double.MAX_VALUE||vega==Double.MAX_VALUE||optPrice==Double.MAX_VALUE)
 			{
@@ -1780,7 +1780,7 @@ class EDecoder implements ObjectInput {
 		}//end for version>=2
 		//new add 
 		//将price补充到Secrity的file里
- 		if(tickType==9)//close price
+ 		if(tickType==9||tickType==75)//9 close price or 75 Delayed Close
  		{
  			ap.addStockToFile(tickerId, tickType, price);
  		}

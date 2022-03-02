@@ -11,7 +11,7 @@ package com.ib.check.underlying;
 		 String right;
 		 String symbol;
 		 String date;
-		 double positon;
+		 double position;
 		 double avgCost;
 		 double strikePrice;
 		 double optionPrice;
@@ -26,7 +26,7 @@ package com.ib.check.underlying;
 			 
 		 }
 		 
-	     public Option( String contract_account, String contract_localSymbol, String contract_secType,String contract_right,String contract_symbol,String contract_date,int contract_positon,
+	     public Option( String contract_account, String contract_localSymbol, String contract_secType,String contract_right,String contract_symbol,String contract_date,int contract_position,
 	             int contract_avgCost,
 	    		 int contract_strikePrice,
 	    		 int contract_optionPrice,
@@ -43,7 +43,7 @@ package com.ib.check.underlying;
 	    	  right=contract_right;
 	    	  symbol=contract_symbol;
 			  date=contract_date;
-			  positon=contract_positon;
+			  position=contract_position;
 			  avgCost=contract_avgCost;
 			  strikePrice=contract_strikePrice;
 			  optionPrice=contract_optionPrice;
@@ -112,12 +112,12 @@ package com.ib.check.underlying;
 				this.date = date;
 			}
 
-			public double getPositon() {
-				return positon;
+			public double getPosition() {
+				return position;
 			}
 
-			public void setPositon(double positon) {
-				this.positon = positon;
+			public void setPosition(double position) {
+				this.position = position;
 			}
 
 			public double getAvgCost() {

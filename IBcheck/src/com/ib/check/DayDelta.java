@@ -1,0 +1,867 @@
+package com.ib.check;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ib.check.account.Account;
+import com.ib.check.account.DealFile;
+import com.ib.check.underlying.Index;
+import com.ib.check.underlying.Option;
+import com.ib.check.underlying.Security;
+import com.ib.check.underlying.Stock;
+
+public class DayDelta {
+	List<Option> optionList = new ArrayList<Option>();
+	List<Stock> stockList = new ArrayList<Stock>();
+	List<Security> securityList = new ArrayList<Security>();// 全部头寸都进入此
+	double spxprice=1;
+	double spx_delta=0;
+	double nasdaq=0;
+	
+	DealFile dealfile = new DealFile();
+	
+/*
+//取期权
+	public Account getOPTPflioDelta(List<Option> optionList) {
+
+		int portfolio_delta = 0;
+		int portfolio_cost = 0;
+
+		double portfolio_theta = 0;
+		double portfolio_vega = 0;
+		double portfolio_gamma = 0;
+		
+		// call
+		int long_call_delta = 0;
+		int short_call_delta = 0;
+		// put
+		int long_put_delta = 0;
+		int short_put_delta = 0;
+
+		int long_call_num = 0;
+		int short_call_num = 0;
+
+		int long_put_num = 0;
+		int short_put_num = 0;
+
+		int long_call_cost = 0;
+		int short_call_cost = 0;
+
+		int long_put_cost = 0;
+		int short_put_cost = 0;
+
+		int call_cost = 0;
+		int put_cost = 0;
+
+		// call put 总数
+		int call_delta = 0;
+		int put_delta = 0;
+
+		// call数量，put数量
+		int call_num = 0;
+		int put_num = 0;
+
+		// long 数量 short 数量
+		int long_num = 0;
+		int short_num = 0;
+
+		// long short总数
+		int long_delta = 0;
+		int short_delta = 0;
+
+		int op_num = 0;
+	Account account=new Account();
+		
+		int i = 0;
+		for (i = 0; i < optionList.size(); i++) {
+			Option option = new Option();
+			option = optionList.get(i);
+			double delta = 0;
+			double cost = 0;
+			double gamma = 0;
+			double theta = 0;
+			double vega = 0;
+
+			delta = option.getDelta() * option.getPosition() * option.getStrikePrice() * 100;// 取每个期权的delta值
+			int deltaDollars = (int) delta;
+			cost = option.getAvgCost() * option.getPosition();
+			int optioncost = (int) cost;
+
+			theta = option.getTheta() * option.getPosition() * 100;
+			portfolio_theta = portfolio_theta + theta;
+
+			gamma = option.getGamma() * option.getPosition() * 100;
+			portfolio_gamma = portfolio_gamma + gamma;
+
+			vega = option.getVega() * option.getPosition() * 100;
+			portfolio_vega = portfolio_vega + vega;
+
+			// System.out.println(option.getLocalSymbol() + "的delta值=" + (int)
+			// deltaDollars);
+
+			if (option.getRight().contentEquals("P"))// put
+			{
+				if (option.getPosition() < 0)// short put
+				{
+
+					short_put_delta = short_put_delta + deltaDollars;
+					short_put_cost = short_put_cost + optioncost;
+					short_put_num++;
+				}
+
+				if (option.getPosition() > 0)// long put
+				{
+					long_put_delta = long_put_delta + deltaDollars;
+					long_put_cost = long_put_cost + optioncost;
+					long_put_num++;
+				}
+
+				put_num++;
+
+			}
+
+			if (option.getRight().contentEquals("C"))// call
+			{
+
+				if (option.getPosition() > 0)// long call
+				{
+					long_call_delta = long_call_delta + deltaDollars;
+					long_call_cost = long_call_cost + optioncost;
+					long_call_num++;
+				}
+
+				if (option.getPosition() < 0)// short call
+				{
+
+					short_call_delta = short_call_delta + deltaDollars;
+					short_call_cost = short_call_cost + optioncost;
+					short_call_num++;
+				}
+
+			}
+			put_num = short_put_num + long_put_num;
+			call_num = short_call_num + long_call_num;
+			op_num = short_put_num + long_put_num + short_call_num + long_call_num;
+			portfolio_delta = deltaDollars + portfolio_delta;
+			call_delta = long_call_delta + short_call_delta;
+			put_delta = short_put_delta + long_put_delta;
+			call_cost = long_call_cost + short_call_cost;
+			put_cost = short_put_cost + long_put_cost;
+			portfolio_cost = call_cost + put_cost;
+			//将结果写入Account里
+
+			account.setAccount(option.getAccount());
+			
+			account.setPortfolioDelta(portfolio_delta);
+			account.setPortfoliotheta((int)portfolio_theta);
+			account.setPortfolioGamma((int)portfolio_gamma );
+			account.setPortfoliovega((int)portfolio_vega);
+			
+			account.setOp_num(op_num);
+			account.setPortfolio_cost(portfolio_cost);
+			
+			account.setPut_delta(put_delta);
+			account.setPut_num(put_num);
+			account.setPut_cost(put_cost);
+			
+			account.setCall_delta(call_delta);
+			account.setCall_num(call_num);
+			account.setCall_cost(call_cost);
+			
+			account.setShort_put_delta(short_put_delta);
+			account.setShort_put_num(short_put_num);
+			account.setShort_put_cost(short_put_cost);
+			
+			account.setLong_call_delta(long_call_delta);
+			account.setLong_call_num(long_call_num);
+			account.setLong_call_cost(long_call_cost);
+			
+			account.setShort_call_delta(short_call_delta);
+			account.setShort_call_num(short_call_num);
+			account.setShort_call_cost(short_call_cost);
+			
+			account.setLong_put_delta(long_put_delta);
+			account.setLong_put_num(long_put_num);
+			account.setLong_put_cost(long_put_cost);
+			
+
+		} // end for
+
+
+		System.out.println("整个组合里期权的delta总值为:" + portfolio_delta + ",期权成本为:" + portfolio_cost);
+		System.out.println("整个组合的Theta为:" +String.format("%.2f", portfolio_theta)  + ",Vega为" + String.format("%.2f", portfolio_vega) + "，Gamma为:" + String.format("%.2f", portfolio_gamma));
+		System.out.println();
+		System.out.print("账户里期权个数总计为:" + op_num);
+		System.out.print("，其中Put个数共有:" + put_num);
+		System.out.println("，其中Call个数共有:" + call_num);
+		System.out.println("Call Delta合计:" + call_delta + ",成本为:" + call_cost);
+		System.out.println("Put Delta合计：" + put_delta + ",成本为:" + put_cost);
+		System.out.println();
+		System.out.println(
+				"期权组合中的short put 合计delta为:" + short_put_delta + "，数量为:" + short_put_num + "，成本为:" + short_put_cost);
+		System.out.println(
+				"期权组合中的long call 合计delta为:" + long_call_delta + "，数量为:" + long_call_num+ "，成本为:" + long_call_cost);
+		System.out.println(
+				"期权组合中的short call 合计delta为:" + short_call_delta + "，数量为:" + short_call_num + "，成本为:" + short_call_cost);
+		System.out.println(
+				"期权组合中的long put 合计delta为:" + long_put_delta + "，数量为:" + long_put_num + "，成本为:" + long_put_cost);
+		System.out.println();
+
+        return account;
+	}
+
+	*/
+
+	
+	
+	
+	//取期权和股票及 ETF
+		public Account getALLPflioDelta( List<Security> secList ) {
+
+			int option_delta = 0;
+			int stock_delta=0;
+			int portfolio_delta=0;
+		    
+			int portfolio_cost = 0;
+
+			double portfolio_theta = 0;
+			double portfolio_vega = 0;
+			double portfolio_gamma = 0;
+			
+			// call
+			int long_call_delta = 0;
+			int short_call_delta = 0;
+			// put
+			int long_put_delta = 0;
+			int short_put_delta = 0;
+
+			int long_call_num = 0;
+			int short_call_num = 0;
+
+			int long_put_num = 0;
+			int short_put_num = 0;
+
+			int long_call_cost = 0;
+			int short_call_cost = 0;
+
+			int long_put_cost = 0;
+			int short_put_cost = 0;
+
+			int call_cost = 0;
+			int put_cost = 0;
+
+			// call put 总数
+			int call_delta = 0;
+			int put_delta = 0;
+
+			// call数量，put数量
+			int call_num = 0;
+			int put_num = 0;
+
+			// long 数量 short 数量
+			int long_num = 0;
+			int short_num = 0;
+
+			// long short总数
+			int long_delta = 0;
+			int short_delta = 0;
+
+			int op_num = 0;		
+			Account account=new Account();
+			
+			int i = 0;
+			for (i = 0; i < secList.size(); i++) {
+				 double delta = 0;
+				 Security	secutity = secList.get(i);
+				
+				 //如果是期权类型则进入
+				 if(secutity.getSecType().equalsIgnoreCase("OPT"))
+				 {
+					
+						double cost = 0;
+						double gamma = 0;
+						double theta = 0;
+						double vega = 0;
+						int num=0;
+						Option option = new Option();
+						option=(Option)secutity;
+								
+								
+						delta = option.getDelta() * option.getPosition() * option.getStrikePrice() * 100;// 取每个期权的delta值
+						int deltaDollars = (int)delta;
+					//	System.out.println(option.getLocalSymbol()+"的delta值为："+deltaDollars);
+						cost = option.getAvgCost() * option.getPosition();
+						int optioncost = (int) cost;
+
+						theta = option.getTheta() * option.getPosition() * 100;
+						portfolio_theta = portfolio_theta + theta;
+
+						gamma = option.getGamma() * option.getPosition() * 100;
+						portfolio_gamma = portfolio_gamma + gamma;
+
+						vega = option.getVega() * option.getPosition() * 100;
+						portfolio_vega = portfolio_vega + vega;
+						
+						num=(int)option.getPosition();
+
+						
+
+						if (option.getRight().contentEquals("P"))// put
+						{
+							if (option.getPosition() < 0)// short put
+							{
+
+								short_put_delta = short_put_delta + deltaDollars;
+								short_put_cost = short_put_cost + optioncost;
+								short_put_num=short_put_num+num;
+							}
+
+							if (option.getPosition() > 0)// long put
+							{
+								long_put_delta = long_put_delta + deltaDollars;
+								long_put_cost = long_put_cost + optioncost;
+								long_put_num=long_put_num+num;
+							}
+
+							put_num++;
+
+						}//end if P
+
+						if (option.getRight().contentEquals("C"))// call
+						{
+
+							if (option.getPosition() > 0)// long call
+							{
+								long_call_delta = long_call_delta + deltaDollars;
+								long_call_cost = long_call_cost + optioncost;
+								long_call_num=long_call_num+num;
+							}
+
+							if (option.getPosition() < 0)// short call
+							{
+
+								short_call_delta = short_call_delta + deltaDollars;
+								short_call_cost = short_call_cost + optioncost;
+								short_call_num=short_call_num+num;
+							}
+
+						}//end if C
+						put_num = short_put_num + long_put_num;
+						call_num = short_call_num + long_call_num;
+						op_num = short_put_num + long_put_num + short_call_num + long_call_num;
+						option_delta = deltaDollars + option_delta;
+						call_delta = long_call_delta + short_call_delta;
+						put_delta = short_put_delta + long_put_delta;
+						call_cost = long_call_cost + short_call_cost;
+						put_cost = short_put_cost + long_put_cost;
+						portfolio_cost = call_cost + put_cost;
+
+					} //end if OPT
+				 else //股票及ETF则进入
+				 if(secutity.getSecType().equalsIgnoreCase("STK"))
+				 {
+						
+					 Stock stock= (Stock)secutity;
+				//	 System.out.println("stock is:"+stock.getSymbol());
+					 
+						delta =stock.getPrice() * stock.getPosition() ;// 取每个期权的delta值
+					
+						stock_delta=stock_delta+(int) delta;
+					 
+					 
+				 }//end if STK
+					 
+				 else 
+					 if(secutity.getSecType().equalsIgnoreCase("IND"))//指数则取出SPX的收盘价格
+					 {
+						 
+						 Index index= (Index)secutity;
+						 
+						if(secutity.getSymbol().equalsIgnoreCase("SPX"))
+						  spxprice=index.getPrice();
+						if(secutity.getSymbol().equalsIgnoreCase("COMP"))
+							nasdaq=index.getPrice();
+					 }		 
+				 
+				 portfolio_delta=stock_delta+option_delta;
+				 
+				 }// end for
+				 
+			//将结果写入Account里
+
+			 spx_delta=portfolio_delta/spxprice; //取SPX
+			account.setAccount(secList.get(0).getAccount());//就取第一个
+			
+			account.setNasdaq((int)nasdaq);
+			account.setSpx((int)spxprice);
+			
+			account.setPortfolioDelta((int)portfolio_delta);
+			account.setOption_delta((int)option_delta);
+			account.setStock_delta((int)stock_delta);
+			
+			account.setSpx_delta((int)spx_delta);
+			account.setPortfoliotheta((int)portfolio_theta);
+			account.setPortfolioGamma((int)portfolio_gamma );
+			account.setPortfoliovega((int)portfolio_vega);
+			
+			account.setOp_num(op_num);
+			account.setPortfolio_cost(portfolio_cost);
+			
+			account.setPut_delta(put_delta);
+			account.setPut_num(put_num);
+			account.setPut_cost(put_cost);
+			
+			account.setCall_delta(call_delta);
+			account.setCall_num(call_num);
+			account.setCall_cost(call_cost);
+			
+			account.setShort_put_delta(short_put_delta);
+			account.setShort_put_num(short_put_num);
+			account.setShort_put_cost(short_put_cost);
+			
+			account.setLong_call_delta(long_call_delta);
+			account.setLong_call_num(long_call_num);
+			account.setLong_call_cost(long_call_cost);
+			
+			account.setShort_call_delta(short_call_delta);
+			account.setShort_call_num(short_call_num);
+			account.setShort_call_cost(short_call_cost);
+			
+			account.setLong_put_delta(long_put_delta);
+			account.setLong_put_num(long_put_num);
+			account.setLong_put_cost(long_put_cost);
+			
+			
+			
+			// System.out.println("SPX price is :"+spxprice);
+			
+
+			System.out.print(dealfile.FileNameDate());
+			System.out.println("日的NASDAQ指数是:"+nasdaq+",SPX指数是:"+spxprice);
+			
+			System.out.println(account.getAccount()+"账户的delta总值为:"+portfolio_delta+",股票的delta总值为:"+stock_delta+",期权的delta总值为:" + option_delta + ",期权权利金为:" + portfolio_cost);
+			System.out.println("整个组合的SPX Delta:"+String.format("%.1f",spx_delta) +",Theta为:" +String.format("%.1f", portfolio_theta)  + ",Vega为" + String.format("%.1f", portfolio_vega) + "，Gamma为:" + String.format("%.1f", portfolio_gamma));
+			System.out.println();
+		
+			System.out.print("账户里Put个数共有:" + put_num);
+			System.out.print("，Call个数共有:" + call_num);
+			System.out.println("，总计为:" + op_num);
+			
+			System.out.println("Call Delta合计:" + (int)call_delta + ",成本为:" + call_cost);
+			System.out.println("Put Delta合计：" + (int)put_delta + ",成本为:" + put_cost);
+			System.out.println();
+			System.out.println(
+					"期权组合中的short put 合计delta为:" + (int)short_put_delta + "，数量为:" + short_put_num + "，成本为:" + short_put_cost);
+			System.out.println(
+					"期权组合中的long call 合计delta为:" + (int)long_call_delta + "，数量为:" + long_call_num+ "，成本为:" + long_call_cost);
+			System.out.println(
+					"期权组合中的short call 合计delta为:" + (int)short_call_delta + "，数量为:" + short_call_num + "，成本为:" + short_call_cost);
+			System.out.println(
+					"期权组合中的long put 合计delta为:" + (int)long_put_delta + "，数量为:" + long_put_num + "，成本为:" + long_put_cost);
+			System.out.println();
+
+	        return account;
+		}
+
+	//传递过来的List 有股票也有期权
+		public void getALLCloseOptionList(List<Security> secList) {
+			int sum_short = 0;
+			int sum_long = 0;
+			for (int i = 0; i < secList.size(); i++) {
+
+				//为期权类型才进入
+				if(secList.get(i).getSecType().equalsIgnoreCase("OPT"))
+				{
+					
+					 Option option = (Option)secList.get(i);
+					double op_price = option.getOptionPrice() * 100;
+					double op_avgprice = option.getAvgCost();
+					double short_ratio = (1 - op_price / op_avgprice) * 100;
+					double long_ratio = 100 * (op_price - op_avgprice) / op_avgprice;
+					//未实现盈利金额
+					double profit=(op_price-op_avgprice)*option.getPosition();
+					
+
+					// 先判断如果position为负，即short put or call则把盈利70%以上的分别列出来。
+					if (option.getPosition() < 0) {
+
+						if (short_ratio > 70) {
+							System.out.println(option.getDate() + "日到期" + option.getSymbol() + "执行价"
+									+ (int) option.getStrikePrice() + "持有" + (int) option.getPosition() + "张" + option.getRight()
+									+ "，未实现盈利%=" + String.format("%.2f", short_ratio) + "%"
+						         	+ "，未实现盈利="+(int) profit  );
+							sum_short=sum_short+(int)option.getPosition();
+						}
+					}
+					// 若是long option,则有65%的盈利则分别列出
+					if (option.getPosition() > 0) {
+						if (long_ratio > 65) {
+							System.out.println(option.getDate() + "日到期" + option.getSymbol() + "执行价"
+									+ (int) option.getStrikePrice() + "持有" + (int) option.getPosition() + "张" + option.getRight()
+									+ "，未实现盈利=" + String.format("%.2f", long_ratio) + "%"
+									+ "，未实现盈利="+(int) profit  );
+							sum_long=sum_long+(int)option.getPosition();
+						}
+					}
+				}//end if OPT
+				} // end for
+
+				System.out.println("建议平仓short的数量小计为:" + sum_short);
+				System.out.println("建议平仓Long的数量小计为:" + sum_long);
+					
+					
+					
+				}
+				
+		
+	
+	
+	
+	
+	//全部是期权的时候
+	public void getCloseOptionList(List<Option> optionList) {
+		int sum_short = 0;
+		int sum_long = 0;
+		for (int i = 0; i < optionList.size(); i++) {
+
+			Option option = new Option();
+			option = optionList.get(i);
+			double op_price = option.getOptionPrice() * 100;
+			double op_avgprice = option.getAvgCost();
+			//未实现盈利百分比
+			double short_ratio = (1 - op_price / op_avgprice) * 100;
+			double long_ratio = 100 * (op_price - op_avgprice) / op_avgprice;
+			
+			//未实现盈利金额
+			double profit=(op_price-op_avgprice)*option.getPosition();
+		
+
+			// 先判断如果position为负，即short put or call则把盈利65%以上的分别列出来。
+			if (option.getPosition() < 0) {
+
+				if (short_ratio > 70) {
+					System.out.println(option.getDate() + "日到期" + option.getSymbol() + "执行价"
+							+ (int) option.getStrikePrice() + "持有" + (int) option.getPosition() + "张" + option.getRight()
+							+ "，未实现盈利%=" + String.format("%.2f", short_ratio) + "%"
+				         	+ "，未实现盈利="+(int) profit  );
+					sum_short=sum_short+(int)option.getPosition();
+				}
+			}
+			// 若是long option,则有65%的盈利则分别列出
+			if (option.getPosition() > 0) {
+				if (long_ratio > 65) {
+					System.out.println(option.getDate() + "日到期" + option.getSymbol() + "执行价"
+							+ (int) option.getStrikePrice() + "持有" + (int) option.getPosition() + "张" + option.getRight()
+							+ "，未实现盈利=" + String.format("%.2f", long_ratio) + "%"
+							+ "，未实现盈利="+(int) profit  );
+					sum_long=sum_long+(int)option.getPosition();
+				}
+			}
+
+		} // end for
+
+		System.out.println("建议平仓short的数量小计为:" + sum_short);
+		System.out.println("建议平仓Long的数量小计为:" + sum_long);
+	}
+
+	
+	//返回所有的期权
+	public List<Option> getALLOP(String path) {
+		
+		String filetext = "";// 取出本地文件
+		filetext = dealfile.ReadFile(path);
+		int i = 0;// 按本地文件行走
+		int j = 0;// 按本地文件1行再分开走
+		String[] row = filetext.split("\\r\\n");// 转义
+
+		for (i = 0; i < row.length; i++)// 进入文本里，每次一行记录开始循环
+		{
+			Option op = new Option();
+
+			String str = row[i]; // str为一行的内容
+			String contract[] = str.split("\\|");
+			for (j = 0; j < contract.length; j++) {
+				String unit[] = contract[j].split("=");
+				if (contract[j].contains("conid")) {
+					op.setConid(Integer.parseInt(unit[1]));
+					continue;
+				}
+
+				if (contract[j].contains("account")) {
+					op.setAccount(unit[1]);
+					continue;
+				}
+				if (contract[j].contains("localSymbol")) {
+					op.setLocalSymbol(unit[1]);
+					continue;
+				}
+				if (contract[j].contains("secType")) {
+					op.setSecType(unit[1]);
+					continue;
+				}
+				if (contract[j].contains("right")) {
+					op.setRight(unit[1]);
+					continue;
+				}
+				if (contract[j].contains("symbol")) {
+					op.setSymbol(unit[1]);
+					continue;
+				}
+				if (contract[j].contains("date")) {
+					op.setDate(unit[1]);
+					continue;
+				}
+				if (contract[j].contains("position")) {
+					op.setPosition(Double.valueOf(unit[1]));
+					continue;
+				}
+				if (contract[j].contains("avgCost")) {
+					op.setAvgCost(Double.valueOf(unit[1]));
+					continue;
+				}
+				if (contract[j].contains("strikePrice")) {
+					op.setStrikePrice(Double.valueOf(unit[1]));
+					continue;
+				}
+				if (contract[j].contains("optionPrice")) {
+					op.setOptionPrice(Double.valueOf(unit[1]));
+					continue;
+				}
+				if (contract[j].contains("delta")) {
+					op.setDelta(Double.valueOf(unit[1]));
+					continue;
+				}
+				if (contract[j].contains("gamma")) {
+					op.setGamma(Double.valueOf(unit[1]));
+					continue;
+				}
+				if (contract[j].contains("vega")) {
+					op.setVega(Double.valueOf(unit[1]));
+					continue;
+				}
+				if (contract[j].contains("theta")) {
+					op.setTheta(Double.valueOf(unit[1]));
+					continue;
+				}
+				if (contract[j].contains("imvolatility")) {
+					op.setImvolatility(Double.valueOf(unit[1]));
+					
+					continue;
+				}
+				if (contract[j].contains("underlyingPrice")) {
+					op.setUnderlyingPrice(Double.valueOf(unit[1]));
+					
+					continue;
+				}
+
+			} // end for j
+			optionList.add(op);
+		} // end for i
+		return optionList;
+	}
+
+	//返回所有的stock，option，ETF
+	public List<Security> getALLSecruity(String path) {
+		String filetext = "";// 取出本地文件
+		filetext = dealfile.ReadFile(path);
+		int i = 0;// 按本地文件行走
+		int j = 0;// 按本地文件1行再分开走
+		String[] row = filetext.split("\\r\\n");// 转义
+
+		for (i = 0; i < row.length; i++)// 进入文本里，每次一行记录开始循环
+		{
+			
+		
+
+			String str = row[i]; // str为一行的内容
+			//该行记录为期权时进入
+			if(str.contains("secType=OPT"))
+			{
+				Option op = new Option();
+				String contract[] = str.split("\\|");
+				for (j = 0; j < contract.length; j++) {
+					String unit[] = contract[j].split("=");
+					if (contract[j].contains("conid")) {
+						op.setConid(Integer.parseInt(unit[1]));
+						continue;
+					}
+
+					if (contract[j].contains("account")) {
+						op.setAccount(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("localSymbol")) {
+						op.setLocalSymbol(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("secType")) {
+						op.setSecType(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("right")) {
+						op.setRight(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("symbol")) {
+						op.setSymbol(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("date")) {
+						op.setDate(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("position")) {
+						op.setPosition(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("avgCost")) {
+						op.setAvgCost(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("strikePrice")) {
+						op.setStrikePrice(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("optionPrice")) {
+						op.setOptionPrice(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("delta")) {
+						op.setDelta(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("gamma")) {
+						op.setGamma(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("vega")) {
+						op.setVega(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("theta")) {
+						op.setTheta(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("imvolatility")) {
+						op.setImvolatility(Double.valueOf(unit[1]));
+						
+						continue;
+					}
+					if (contract[j].contains("underlyingPrice")) {
+						op.setUnderlyingPrice(Double.valueOf(unit[1]));
+						
+						continue;
+					}
+				} // end for OPT j
+				
+				securityList.add(op);
+			}//end  if opt
+			else if(str.contains("secType=STK"))
+			{
+				Stock stk=new Stock();
+			
+
+				String contract[] = str.split("\\|");
+				for (j = 0; j < contract.length; j++) {
+					String unit[] = contract[j].split("=");
+					if (contract[j].contains("conid")) {
+						stk.setConid(Integer.parseInt(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("account")) {
+						stk.setAccount(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("secType")) {
+						stk.setSecType(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("symbol")) {
+						stk.setSymbol(unit[1]);
+						continue;
+					}
+			
+					if (contract[j].contains("position")) {
+						stk.setPosition(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("avgCost")) {
+						stk.setAvgCost(Double.valueOf(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("price")) {
+						stk.setPrice(Double.valueOf(unit[1]));
+						continue;
+					}
+			}//end for STK j
+				securityList.add(stk);
+		} // end  if STK
+			//指数则进入
+			else if(str.contains("secType=IND"))
+			{
+				Index indx=new Index();
+			
+
+				String contract[] = str.split("\\|");
+				for (j = 0; j < contract.length; j++) {
+					String unit[] = contract[j].split("=");
+					if (contract[j].contains("conid")) {
+						indx.setConid(Integer.parseInt(unit[1]));
+						continue;
+					}
+					if (contract[j].contains("account")) {
+						indx.setAccount(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("secType")) {
+						indx.setSecType(unit[1]);
+						continue;
+					}
+					if (contract[j].contains("symbol")) {
+						indx.setSymbol(unit[1]);
+						continue;
+					}
+			
+					if (contract[j].contains("price")) {
+						indx.setPrice(Double.valueOf(unit[1]));
+						continue;
+					}
+			}//end for STK j
+				securityList.add(indx);
+		} // end  if STK
+			
+			
+			
+			
+			
+			
+		}//end for i
+		return securityList;
+	}
+	
+	
+	
+	public static void main(String args[]) throws IOException {
+		//List<Option> opList = new ArrayList<Option>();
+		List<Security> secList= new ArrayList<Security>();	
+		DayDelta daydelta = new DayDelta();
+		DealFile dealfile = new DealFile();
+		Account account=new Account();
+		/*只按option来计算GREEK和写excel
+	//	opList=daydelta.getALLOP(dealfile.path_U9238GREEK);
+	//	opList = daydelta.getALLOP(dealfile.path_U1001GREEK);
+	//	daydelta.getCloseOptionList(opList);//提示获取时间价值的Option
+        */
+		
+		//按stock和option一起来计算delta并写到excel中
+	//	secList = daydelta.getALLSecruity(dealfile.path_U1001GREEK);
+		secList = daydelta.getALLSecruity(dealfile.path_U9238GREEK);
+		account=daydelta.getALLPflioDelta(secList);//获取并封装账户相关的Greek等信息
+		
+		daydelta.getALLCloseOptionList(secList);//提示获取时间价值的Option
+	    dealfile.ResultWriteTOExcel(account);//将每个账户写入excel里。
+
+	}
+
+}

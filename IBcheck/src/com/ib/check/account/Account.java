@@ -10,6 +10,11 @@ public class Account {
 
 	int portfolio_cost;
 
+
+	int spx;
+	int nasdaq;
+	int spx_delta;
+
 	int portfolioGamma;
 	int portfoliovega;
 	int portfoliotheta;
@@ -48,7 +53,24 @@ public class Account {
 	int put_num = 0;
 	
 	
-	
+	public int getSpx() {
+		return spx;
+	}
+	public void setSpx(int spx) {
+		this.spx = spx;
+	}
+	public int getNasdaq() {
+		return nasdaq;
+	}
+	public void setNasdaq(int nasdaq) {
+		this.nasdaq = nasdaq;
+	}
+	public int getSpx_delta() {
+		return spx_delta;
+	}
+	public void setSpx_delta(int spx_delta) {
+		this.spx_delta = spx_delta;
+	}
 	public int getOption_delta() {
 		return option_delta;
 	}
