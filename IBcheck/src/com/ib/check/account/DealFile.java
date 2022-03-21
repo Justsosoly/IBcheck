@@ -137,6 +137,31 @@ public class DealFile {
 
 		return filedate;
 	}
+	
+	public String FileNameTime() {
+		Date date = new Date();
+		String filetime = "";
+
+		String year = String.format("%tY", date);
+
+		String month = String.format("%tm", date);
+
+		String day = String.format("%td", date);
+		
+		String hour = String.format("%tH", date);
+		
+		String min = String.format("%tM ", date);
+		
+		 
+
+		filetime = year +"/"+ month+"/" + day+"/" +hour+":"+min;
+		// System.out.println("今天是："+filedate);
+
+		return filetime;
+	}
+	
+	
+	
 
 //从本地文件读出
 	public String ReadFile(String path) {
@@ -184,7 +209,7 @@ public class DealFile {
 
 			// rowNum++;
 
-			Object[][] datatypes = { { this.FileNameDate(),
+			Object[][] datatypes = { { this.FileNameTime(),
 				account.getAccount(),
 				
 				account.getNasdaq(),
@@ -350,7 +375,7 @@ public class DealFile {
 		
 
 
-			Object[][] datatypes = { { this.FileNameDate(),
+			Object[][] datatypes = { { this.FileNameTime(),
 				account.getAccount(),
 				
 				account.getNasdaq(),

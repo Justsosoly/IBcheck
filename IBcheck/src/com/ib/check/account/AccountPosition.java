@@ -21,8 +21,8 @@ public class AccountPosition {
 	public String path_U9238GREEK = dealfile.path_U9238 + "GREEK";
 	public String path_U1001GREEK = dealfile.path_U1001 + "GREEK";
 
-//	public String path = path_U1001;
-	public String path=path_U9238;
+	 public String path = path_U1001;
+	//public String path=path_U9238;
 
 	public String pathGREEK = path + "GREEK";
 
@@ -450,7 +450,6 @@ public class AccountPosition {
 
 		if (contract.getSecType().isEmpty())
 			System.out.println("SecType is empty" + contract.conid());
-
 	}
 
 	public static void main(String args[]) {

@@ -12,51 +12,41 @@ public class GetGreek {
 	
 	public static void main(String[] args) throws InterruptedException {
 		EWrapperImpl wrapper = new EWrapperImpl();
-		
+
 		final EClientSocket m_client = wrapper.getClient();
 		final EReaderSignal m_signal = wrapper.getSignal();
-	
 
 		m_client.eConnect("127.0.0.1", 7496, 0);
 
-		
-		//! [ereader]
-		final EReader reader = new EReader(m_client, m_signal);   
-		
-		reader.start();
-		//An additional thread is created in this program design to empty the messaging queue
-		new Thread(() -> {
-		    while (m_client.isConnected()) {
-		        m_signal.waitForSignal();
-		        try {
-		            reader.processMsgs();
-		        } catch (Exception e) {
-		            System.out.println("Exception: "+e.getMessage());
-		        }
-		    }
-		}).start();
-		//! [ereader]
-		// A pause to give the application time to establish the connection
-		// In a production application, it would be best to wait for callbacks to confirm the connection is complete
-		Thread.sleep(1000);
-		
-		//! [reqmarketdatatype]
-        /*** Switch to live (1) frozen (2) delayed (3) or delayed frozen (4)***/
-	//	 wrapper.getClient().reqMarketDataType(2); 
-        //! [reqmarketdatatype]
-        Thread.sleep(1000);
-        AccountPosition accountposition=new AccountPosition();
-   //    GetGreekbyAccount(wrapper.getClient(),accountposition.path_U1001);
-       GetGreekbyAccount(wrapper.getClient(),accountposition.path_U9238);
-        Thread.sleep(10000);
-        
+		// ! [ereader]
+		final EReader reader = new EReader(m_client, m_signal);
 
-    //    Thread.sleep(10000);
-    
-       
-    
-        
-        
+		reader.start();
+		// An additional thread is created in this program design to empty the messaging
+		// queue
+		new Thread(() -> {
+			while (m_client.isConnected()) {
+				m_signal.waitForSignal();
+				try {
+					reader.processMsgs();
+				} catch (Exception e) {
+					System.out.println("Exception: " + e.getMessage());
+				}
+			}
+		}).start();
+		// ! [ereader]
+		// A pause to give the application time to establish the connection
+		// In a production application, it would be best to wait for callbacks to
+		// confirm the connection is complete
+
+		Thread.sleep(1000);
+		AccountPosition accountposition = new AccountPosition();
+		 GetGreekbyAccount(wrapper.getClient(),accountposition.path_U1001);
+		//GetGreekbyAccount(wrapper.getClient(), accountposition.path_U9238);
+		Thread.sleep(10000);
+
+		// Thread.sleep(10000);
+
 	}
 	
 	public static void GetGreekbyAccount(EClientSocket client,String path) throws InterruptedException
@@ -64,8 +54,7 @@ public class GetGreek {
 		AccountPosition accountposition=new AccountPosition(); 
 		int request_num=0;//本地文件返回请求conid的个数
 		
-		//将本地文件里Option的conid全部取出来放到数组里，循环请求
-	//	 request_num= accountposition.getOptionFromFile(path).length;
+
 		
 		//取出全部conid，包括stock和option
 		request_num= accountposition.getSecuityFromFile(path).length;
@@ -74,7 +63,9 @@ public class GetGreek {
 		 int contractid[]=new int[request_num];
         contractid=accountposition.getSecuityFromFile(path);
 
-
+		//! [reqmarketdatatype]
+        /*** Switch to live (1) frozen (2) delayed (3) or delayed frozen (4)***/
+        //! [reqmarketdatatype]
         client.reqMarketDataType(2); 
         
    //     client.reqMktData(2005, contractByID(536098257),"", false, false, null);
@@ -89,6 +80,9 @@ public class GetGreek {
         	System.out.println("第"+i+"个请求"+contractid[i]);
         	Thread.sleep(100);//1秒
      	}
+        
+     //   client.reqMktData(4001, contractByID(469204796),"", false, false, null);
+        
         
         client.reqMarketDataType(4); 
         client.reqMktData(2001, getSPXIndex(),"", false, false, null);
