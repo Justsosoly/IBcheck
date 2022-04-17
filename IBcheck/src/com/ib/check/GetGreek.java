@@ -17,6 +17,7 @@ public class GetGreek {
 		final EReaderSignal m_signal = wrapper.getSignal();
 
 		m_client.eConnect("127.0.0.1", 7496, 0);
+	//	m_client.eConnect("127.0.0.1", 4001, 1);
 
 		// ! [ereader]
 		final EReader reader = new EReader(m_client, m_signal);
@@ -41,8 +42,8 @@ public class GetGreek {
 
 		Thread.sleep(1000);
 		AccountPosition accountposition = new AccountPosition();
-		 GetGreekbyAccount(wrapper.getClient(),accountposition.path_U1001);
-		//GetGreekbyAccount(wrapper.getClient(), accountposition.path_U9238);
+		//GetGreekbyAccount(wrapper.getClient(),accountposition.path_U1001);
+		GetGreekbyAccount(wrapper.getClient(), accountposition.path_U9238);
 		Thread.sleep(10000);
 
 		// Thread.sleep(10000);
@@ -66,11 +67,12 @@ public class GetGreek {
 		//! [reqmarketdatatype]
         /*** Switch to live (1) frozen (2) delayed (3) or delayed frozen (4)***/
         //! [reqmarketdatatype]
+        
         client.reqMarketDataType(2); 
         
    //     client.reqMktData(2005, contractByID(536098257),"", false, false, null);
         
-       
+     
         //取得本地文件里的conid，挨个请求市场数据
         for(int i=0;i<request_num;i++)
         {      	
@@ -83,7 +85,7 @@ public class GetGreek {
         
      //   client.reqMktData(4001, contractByID(469204796),"", false, false, null);
         
-        
+          
         client.reqMarketDataType(4); 
         client.reqMktData(2001, getSPXIndex(),"", false, false, null);
         Thread.sleep(100);

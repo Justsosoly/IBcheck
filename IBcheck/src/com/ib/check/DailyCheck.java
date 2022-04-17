@@ -440,4 +440,17 @@ public class DailyCheck implements EWrapper {
     public void completedOrdersEnd() {
         System.out.println(EWrapperMsgGenerator.completedOrdersEnd());
     }
+
+	@Override
+	public void tickOptionDelta(int tickerId, int field, double impliedVol, double delta, double optPrice,
+			double pvDividend, double gamma, double vega, double theta, double undPrice) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getPositionExtend(String account, Contract contract, double pos, double avgCost) {
+		// TODO Auto-generated method stub
+		
+	}
 }

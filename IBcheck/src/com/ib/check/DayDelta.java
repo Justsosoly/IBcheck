@@ -921,13 +921,14 @@ public class DayDelta {
 		Account account = new Account();
 
 		// 按stock和option一起来计算delta并写到excel中
-		// secList = daydelta.getALLSecruity(dealfile.path_U1001GREEK);
+		//secList = daydelta.getALLSecruity(dealfile.path_U1001GREEK);
 		secList = daydelta.getALLSecruity(dealfile.path_U9238GREEK);
-
+		
 		account = daydelta.getALLPflioDelta(secList);// 获取并封装账户相关的Greek等信息
 
 		daydelta.getALLCloseOptionList(secList);// 提示获取时间价值的Option
 
+		
 		daydelta.getNeutralOPNum(daydelta.getMapofSecList(secList));// 提示达到中性的数量
 
 		dealfile.ResultWriteTOExcel(account);// 将每个账户写入excel里

@@ -1642,7 +1642,7 @@ class EDecoder implements ObjectInput {
 		//将GREEK补充到Secrity的file里
 		if(tickType==13)//13 Model Option Computation12 Last Option Computation
 		{
-		if(delta == Double.MAX_VALUE||gamma==Double.MAX_VALUE||theta==Double.MAX_VALUE||vega==Double.MAX_VALUE||optPrice==Double.MAX_VALUE)
+		if(delta == Double.MAX_VALUE||gamma==Double.MAX_VALUE||theta==Double.MAX_VALUE||vega==Double.MAX_VALUE||optPrice==Double.MAX_VALUE||undPrice==Double.MAX_VALUE)
 			{
 			System.out.println(tickerId+"获取的市场数据里有无穷大");
 			return;
