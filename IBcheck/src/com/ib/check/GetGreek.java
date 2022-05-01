@@ -11,20 +11,34 @@ public class GetGreek {
 	
 	
 	public static void main(String[] args) throws InterruptedException {
+		AccountPosition accountposition = new AccountPosition();
+		GetGreek getGreek=new GetGreek();
+		//账号各自分开使用
+		//String path=accountposition.path_U1001;
+		//String path=accountposition.path_U9238;
+		//getGreek.DealAllGreek(path,9238);
+//		getGreek.DealAllGreek(path_U1001,1001);
+		//合成一个文件
+     	String path_all=accountposition.path;//2个账号
+		getGreek.DealAllGreek(path_all,6);//port 6 is random
+
+	}
+	
+	public void DealAllGreek(String path_all,int port) throws InterruptedException
+	{
+	
 		EWrapperImpl wrapper = new EWrapperImpl();
 
 		final EClientSocket m_client = wrapper.getClient();
 		final EReaderSignal m_signal = wrapper.getSignal();
 
-		m_client.eConnect("127.0.0.1", 7496, 0);
-	//	m_client.eConnect("127.0.0.1", 4001, 1);
+		m_client.eConnect("127.0.0.1", 7496, port);
+	//	m_client.eConnect("127.0.0.1", 4001, port);
 
-		// ! [ereader]
 		final EReader reader = new EReader(m_client, m_signal);
 
 		reader.start();
-		// An additional thread is created in this program design to empty the messaging
-		// queue
+		
 		new Thread(() -> {
 			while (m_client.isConnected()) {
 				m_signal.waitForSignal();
@@ -35,20 +49,23 @@ public class GetGreek {
 				}
 			}
 		}).start();
-		// ! [ereader]
-		// A pause to give the application time to establish the connection
-		// In a production application, it would be best to wait for callbacks to
-		// confirm the connection is complete
-
+	
 		Thread.sleep(1000);
-		AccountPosition accountposition = new AccountPosition();
-		//GetGreekbyAccount(wrapper.getClient(),accountposition.path_U1001);
-		GetGreekbyAccount(wrapper.getClient(), accountposition.path_U9238);
-		Thread.sleep(10000);
-
-		// Thread.sleep(10000);
-
+	
+		//GetGreekbyAccount(wrapper.getClient(),path);
+		
+		GetGreekbyAccount(wrapper.getClient(),path_all);
+	
+		Thread.sleep(15000);
+		m_client.eDisconnect();
+		Thread.sleep(1000);
+		
+		
 	}
+	
+	
+	
+	
 	
 	public static void GetGreekbyAccount(EClientSocket client,String path) throws InterruptedException
 	{
@@ -70,8 +87,7 @@ public class GetGreek {
         
         client.reqMarketDataType(2); 
         
-   //     client.reqMktData(2005, contractByID(536098257),"", false, false, null);
-        
+    
      
         //取得本地文件里的conid，挨个请求市场数据
         for(int i=0;i<request_num;i++)

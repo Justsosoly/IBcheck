@@ -1649,7 +1649,9 @@ class EDecoder implements ObjectInput {
 			}
 	
 		else //这些数字全部取出才可以
-			ap.addGREEKToFile(tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);//将contract分类成option 或者 stock
+			//ap.addGREEKToFile(tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);//将contract分类成option 或者 stock
+		    ap.insertGREEKToFile(tickerId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);//将contract分类成option 或者 stock
+		
 		}
 		
 		
@@ -1704,9 +1706,11 @@ class EDecoder implements ObjectInput {
 			avgCost = readDouble();
 		}
 
-	//	m_EWrapper.position( account, contract, pos, avgCost);
-		ap.addSecurityToFile(account,contract, pos, avgCost);//将contract分类成option 或者 stock
+		//m_EWrapper.position( account, contract, pos, avgCost);
+	//	ap.addSecurityToFile(account,contract, pos, avgCost);//将contract分类成option 或者 stock
 	
+		ap.addSecurityToOneFile(account,contract, pos, avgCost);
+		
 		m_EWrapper.getPositionExtend(account, contract, pos, avgCost);
 	}
 
@@ -1782,7 +1786,8 @@ class EDecoder implements ObjectInput {
 		//将price补充到Secrity的file里
  		if(tickType==9||tickType==75)//9 close price or 75 Delayed Close
  		{
- 			ap.addStockToFile(tickerId, tickType, price);
+ 		  // ap.addStockToFile(tickerId, tickType, price);
+ 			ap.insertStockToFile(tickerId, tickType, price);
  		}
 		
 	}

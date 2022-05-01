@@ -9,13 +9,21 @@ public class GetPosition {
 	
 	
 	public static void main(String[] args) throws InterruptedException {
-		EWrapperImpl wrapper = new EWrapperImpl();
 		
+		GetPosition gepo= new GetPosition();
+		gepo.getPosition();
+		
+    }
+	
+	
+	public void getPosition() throws InterruptedException
+
+	{
+		EWrapperImpl wrapper = new EWrapperImpl();
 		final EClientSocket m_client = wrapper.getClient();
 		final EReaderSignal m_signal = wrapper.getSignal();
-
-		m_client.eConnect("127.0.0.1", 7496, 2);
-	//	m_client.eConnect("127.0.0.1", 4001, 3);
+		m_client.eConnect("127.0.0.1", 7496, 0);
+	//	m_client.eConnect("127.0.0.1", 4001, 1);
 
 		//! [ereader]
 		final EReader reader = new EReader(m_client, m_signal);   
@@ -33,22 +41,23 @@ public class GetPosition {
 		    }
 		}).start();
 		//! [ereader]
-		
 		// A pause to give the application time to establish the connection
 		// In a production application, it would be best to wait for callbacks to confirm the connection is complete
 		Thread.sleep(1000);
-		
 		   /*** Requesting all accounts' positions. ***/
         //! [reqpositions]
-
         wrapper.getClient().reqPositions();
-        
         //! [reqpositions]
 		Thread.sleep(2000);
 		//! [cancelpositions]
 		wrapper.getClient().cancelPositions();
 		//! [cancelpositions]
-    }
+		Thread.sleep(5000);		
+		m_client.eDisconnect();
+		
+	}
+	
+	
 	}
 	
 

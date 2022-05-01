@@ -34,8 +34,14 @@ public class DealFile {
 
 	public String path_U1001 = "/Users/jiao/Documents/IBAPI/U10019359/" + date;
 	public String path_U9238 = "/Users/jiao/Documents/IBAPI/U9238923/" + date;
+	//2个账号合并1个
+	public String path_All="/Users/jiao/Documents/IBAPI/AccountAll/"+ date+"position";
+	public String path_AllMarket = path_All + "Market";
+	public String path_GREEK=path_All + "GREEK";
+	
 	public String path_U9238GREEK = path_U9238 + "GREEK";
 	public String path_U1001GREEK = path_U1001 + "GREEK";
+
 	public String FILE_NAME = "/Users/jiao/Documents/IBAPI/DailyCheckExcel.xlsx";
 
 	//该方法只新建不更新 getGREEK用，增加判断是否文本里有该conid，有则不写，返回
